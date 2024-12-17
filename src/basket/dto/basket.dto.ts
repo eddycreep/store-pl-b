@@ -78,7 +78,8 @@ export class CombinedProductSpecialsDto {
 export class FinalTransactionDto {
   @IsNumber() basket_id: number;  
   @IsNumber() customer_id: number;
-  @IsString() purchased_product: string; 
+  @IsArray() // Changed to reflect an array of strings
+  @IsString({ each: true }) purchased_product: string[];
   @IsNumber() quantity: number;
   @IsNumber() product_amount: number; 
   @IsNumber() product_discounted_amount: number; 
