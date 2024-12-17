@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
-import { CustomerBasketDto, SaveBasketItemsDto, FinalTransactionDto, ProductDto } from './dto/basket.dto';
+import { CustomerBasketDto, SaveBasketItemsDto, FinalTransactionDto, ProductDto, LoyaltyCustomersDto } from './dto/basket.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { format } from "date-fns";
 
@@ -73,19 +73,46 @@ export class BasketService {
     }
   }
 
-  // async checkLoyaltyCustomer(customerId: string) {
-  //   const query = `SELECT CustomerID, LoyaltyTier 
-  //                   FROM loyalty_program.tblloyaltycustomers 
-  //                   WHERE CustomerID = ?`;
+  async checkLoyaltyCustomer(customerId: string): Promise<LoyaltyCustomersDto[]> {
+    // SQL query to check the loyalty tier for a specific customer
+    const query = `SELECT CustomerID, LoyaltyTier FROM loyalty_program.tblloyaltycustomers WHERE CustomerID = ?`;
+  
+    try {
+      // Query the database and explicitly type the result
+      const results = await this.databaseService.query(query, [customerId]) as LoyaltyCustomersDto[];
+  
+      // If no results are returned, throw a NotFoundException
+      if (results.length === 0) {
+        throw new NotFoundException('Customer not found');
+      }
+  
+      // Return the results (guaranteed to be an array of objects)
+      return results;
+    } catch (error) {
+      // Catch and throw any errors with a detailed message
+      throw new BadRequestException('Error checking loyalty customer: ' + error.message);
+    }
+  }
+
+  // async getProductSpecials(products: string[]) {
+  //   const query = `SELECT 
+  //                   sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
+  //                   sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
+  //                   spi.product_description, spi.special_price
+  //                   FROM loyalty_program.tblspecials sp
+  //                   JOIN loyalty_program.tblspecialitems spi
+  //                   ON sp.special_id = spi.special_id
+  //                   WHERE sp.special_type = 'Special' 
+  //                   AND sp.isActive = 1 
+  //                   AND spi.product_description IN (?) 
+  //                   AND sp.start_date <= CURDATE() 
+  //                   AND sp.expiry_date >= CURDATE()`;
 
   //   try {
-  //     const results: any[] = await this.databaseService.query(query, [customerId]);
-  //     if (!Array.isArray(results) || results.length === 0) {
-  //       throw new NotFoundException('Customer not found');
-  //     }
-  //     return results;
+  //     return Promise.all(products.map((product) => this.databaseService.query(query, [product])));
   //   } catch (error) {
-  //     throw new BadRequestException('Error checking loyalty customer: ' + error.message);
+  //     throw new BadRequestException('Error fetching product specials: ' + error.message);
   //   }
   // }
+  
 }

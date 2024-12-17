@@ -28,13 +28,16 @@ export class BasketController {
   }
 
   
-  // @Get('checkloyalty/:CustomerID')
-  // async checkLoyaltyCustomer(@Param('CustomerID') customerId: string) {
-  //   try {
-  //     return await this.basketService.checkLoyaltyCustomer(customerId);
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+  @Get('checkloyalty/:CustomerID')
+  async checkLoyaltyCustomer(@Param('CustomerID') customerId: string) {
+    try {
+      // Call the service to check loyalty customer data
+      return await this.basketService.checkLoyaltyCustomer(customerId);
+    } catch (error) {
+      // Handle and propagate any errors
+      throw new BadRequestException(error.message);
+    }
+  }
+  
   
 }
