@@ -1,21 +1,77 @@
-import { Controller, Post, Get, Param, Body } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { BasketService } from './basket.service';
 import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, FinalTransactionDto } from './dto/basket.dto';
 import { BadRequestException } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 
+@ApiTags('Basket') // Swagger tag
 @Controller('basket')
 export class BasketController {
   constructor(private readonly basketService: BasketService) {}
 
-  @Post('savecustomerbasket')
-  async saveCustomerBasket(@Body() CustomerBasketDto: CustomerBasketDto) {
-    try {
-      return await this.basketService.saveCustomerBasket(CustomerBasketDto);
-      
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
-  }
+   /**
+   * @swagger
+   * POST /basket/savecustomerbasket
+   * @summary Save basket information
+   * @description Adds customer basket in the store loyalty system.
+   * @tags API
+   * @param {CustomerBasketDto} CustomerBasketDto - The basket data to save.
+   * @returns A success message or error.
+   */
+   @Post('savecustomerbasket')
+   @HttpCode(HttpStatus.OK)
+   @ApiOperation({ summary: 'Save basket information', description: 'Adds customer basket in the store loyalty system.' })
+   @ApiBody({
+     description: 'Customer Basket Data',
+     schema: {
+       type: 'object',
+       properties: {
+         basket_id: { type: 'integer', example: 101, description: 'ID of the basket' },
+         customer_id: { type: 'integer', example: 202, description: 'ID of the customer' },
+         product: { type: 'array', example: [], description: 'Name of the products' },
+         quantity: { type: 'integer', example: 3, description: 'Quantity of the product purchased' },
+         purchase_date: { type: 'string', example: '2023-10-14 13:25:00', description: 'Date of the purchased basket' },
+         total_amount: { type: 'number', example: 45.99, description: 'Total basket amount' },
+         payment_method: { type: 'string', example: 'Cash', description: 'Payment method of the basket' },
+       },
+     },
+   })
+   @ApiResponse({
+     status: 200,
+     description: 'Basket information successfully saved',
+     schema: {
+       type: 'object',
+       properties: {
+         message: { type: 'string', example: 'Success' },
+         data: {
+           type: 'object',
+           properties: {
+             basket_id: { type: 'integer' },
+             customer_id: { type: 'integer' },
+             product: { type: 'array' },
+             quantity: { type: 'integer' },
+             purchase_date: { type: 'string' },
+             total_amount: { type: 'number' },
+             payment_method: { type: 'string' },
+           },
+         },
+       },
+     },
+   })
+   @ApiResponse({
+     status: 500,
+     description: 'Internal server error',
+     schema: {
+       type: 'object',
+       properties: {
+         message: { type: 'string', example: 'Failed' },
+         error: { type: 'string', description: 'Error details' },
+       },
+     },
+   })
+   async saveCustomerBasket(@Body() customerBasketDto: CustomerBasketDto) {
+     return this.basketService.saveCustomerBasket(customerBasketDto);
+   }
 
   @Post('savecustomerbasketitems')
   async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
