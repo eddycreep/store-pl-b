@@ -16,34 +16,18 @@ export class BasketController {
     }
   }
 
-  // @Post('savecustomerbasketitems')
-  // async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
-  //   try {
-  //     return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+  @Post('savecustomerbasketitems')
+  async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
+    console.log('Received SaveBasketItemsDto:', saveBasketItemsDto); // Log the input
+    try {
+      return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
+    } catch (error) {
+      console.error('Error in controller:', error.message);
+      throw new BadRequestException(error.message);
+    }
+  }
 
-  // @Get('getproductprices/:product_description')
-  // async getProductPrices(@Param('product_description') productDescription: string) {
-  //   const products = productDescription.split(',');
-  //   try {
-  //     return await this.basketService.getProductPrices(products);
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
-
-  // @Post('savecustomerbasketitems')
-  // async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
-  //   try {
-  //     return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
-
+  
   // @Get('checkloyalty/:CustomerID')
   // async checkLoyaltyCustomer(@Param('CustomerID') customerId: string) {
   //   try {
@@ -52,13 +36,5 @@ export class BasketController {
   //     throw new BadRequestException(error.message);
   //   }
   // }
-
-  // @Post('savefinaltransaction')
-  // async saveFinalTransaction(@Body() finalTransactionDto: FinalTransactionDto) {
-  //   try {
-  //     return await this.basketService.saveFinalTransaction(finalTransactionDto);
-  //   } catch (error) {
-  //     throw new BadRequestException(error.message);
-  //   }
-  // }
+  
 }

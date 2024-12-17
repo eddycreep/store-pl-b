@@ -1,7 +1,6 @@
 import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
-
 export class CustomerBasketDto {
   @IsNumber() basket_id: number;
   @IsNumber() customer_id: number;
@@ -13,15 +12,6 @@ export class CustomerBasketDto {
 }
 
 
-// export class SaveBasketDto {
-//   @IsNumber() basketId: string;
-//   @IsNumber() customerId: string;
-//   @IsString() purchaseDate: string;
-//   @IsNumber() totalAmount: number;
-//   @IsString() paymentMethod: string;
-// }
-
-
 export class ProductDto {
   @IsNumber() id: number;
   @IsNumber() selling_incl_1: Number;
@@ -29,25 +19,22 @@ export class ProductDto {
   @IsString() description: string
 }
 
-// export class SaveBasketItemsDto {
-//   @IsNumber() basketId: number;
-//   @IsNumber() customerId: number;
-//   @IsString() product: string;
-//   @IsNumber() quantity: number;
-//   @IsNumber() productPrice: number; // To handle decimal precision
-//   @IsString() insertionTime: string; // ISO format
-//   @IsNumber() discountApplied?: number; // Optional for items with discounts
-//   @IsNumber() finalPrice?: number; // Optional for items with final price
-// }
+
 export class SaveBasketItemsDto {
-  @IsNumber() basketId: number;
-  @IsNumber() customerId: number;
-  @IsString() product: string;
-  @IsNumber() quantity: number;
-  @IsNumber() productPrice?: number; // To handle decimal precision
-  @IsString() insertionTime: string; // ISO format
-  @IsNumber() discountApplied?: number; // Optional for items with discounts
-  @IsNumber() finalPrice?: number; // Optional for items with final price
+  @IsNumber() basket_id: number; 
+  @IsNumber() customer_id: number; 
+  @IsArray() // Changed to reflect an array of strings
+  @IsString({ each: true }) product: string[];
+  @IsNumber() quantity: number; 
+  @IsString() insertion_time: string;
+}
+
+
+export class UpdateBasketItemsDto {
+  @IsNumber() basket_id: number; 
+  @IsNumber() product_price?: number; 
+  @IsNumber() discount_applied?: number; 
+  @IsNumber() final_price?: number; 
 }
 
 
