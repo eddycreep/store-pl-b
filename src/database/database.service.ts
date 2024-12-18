@@ -7,10 +7,10 @@ export class DatabaseService implements OnModuleInit {
 
   constructor() {
     this.pool = mysql.createPool({
-      host: process.env.HOST || 'localhost', // Default to 'localhost' if undefined
-      user: process.env.USER || 'root',
-      password: process.env.PASSWORD || '',
-      database: process.env.DATABASE || 'test',
+      host: process.env.HOST,
+      user: process.env.USER,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
     });
   }
 
