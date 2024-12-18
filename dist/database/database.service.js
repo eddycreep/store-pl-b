@@ -22,7 +22,7 @@ let DatabaseService = class DatabaseService {
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0,
-            connectTimeout: 10000,
+            connectTimeout: 120000,
         });
     }
     async query(sql, params) {
