@@ -11,22 +11,40 @@ export class DatabaseService implements OnModuleInit {
       user: process.env.USER,
       password: process.env.PASSWORD,
       database: process.env.DATABASE,
-    });
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      connectTimeout: 10000, // Timeout of 10 seconds
+  });  
   }
 
   async query(sql: string, params: any[]) {
-    const [results] = await this.pool.execute(sql, params);
-    return results;
+    try {
+        const [results] = await this.pool.execute(sql, params);
+        return results;
+    } catch (error) {
+        console.error('Database query error:', {
+            message: error.message,
+            code: error.code,
+            stack: error.stack,
+        });
+        throw error;
+    }
   }
 
   async onModuleInit() {
-    try {
-      const connection = await this.pool.getConnection();
-      console.log('Database has been connected successfully');
-      connection.release();
-    } catch (error) {
-      console.error('Error connecting to the database:', error.message);
-      throw error;
+    let attempts = 5;
+    while (attempts > 0) {
+        try {
+            const connection = await this.pool.getConnection();
+            console.log('Database has been connected successfully');
+            connection.release();
+            return;
+        } catch (error) {
+            console.error(`Failed to connect to database. Retries left: ${--attempts}`);
+            if (attempts === 0) throw error;
+            await new Promise((res) => setTimeout(res, 2000)); // Wait 2 seconds before retrying
+        }
     }
   }
 }
