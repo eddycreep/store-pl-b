@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npx nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node dist/main.ts",
+    "start": "node dist/main",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -28,6 +28,7 @@
     "@nestjs/swagger": "^8.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "cookiejar": "^2.1.4",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "modules": "^0.4.0",
