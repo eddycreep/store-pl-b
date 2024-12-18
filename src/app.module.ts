@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { BasketModule } from './basket/basket.module';
 import { DatabaseModule } from './database/database.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { DatabaseModule } from './database/database.module';
     // Import application modules
     UsersModule,   // Module for managing users
     BasketModule,  // Module for basket-related functionality
-    DatabaseModule // Module for database configuration and connection
+    DatabaseModule, ProductsModule // Module for database configuration and connection
   ],
   controllers: [AppController], // Include main application controller
   providers: [AppService],      // Include main application service

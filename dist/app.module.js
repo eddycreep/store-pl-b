@@ -14,6 +14,7 @@ const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const basket_module_1 = require("./basket/basket.module");
 const database_module_1 = require("./database/database.module");
+const products_module_1 = require("./products/products.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -26,7 +27,7 @@ exports.AppModule = AppModule = __decorate([
             }),
             users_module_1.UsersModule,
             basket_module_1.BasketModule,
-            database_module_1.DatabaseModule
+            database_module_1.DatabaseModule, products_module_1.ProductsModule
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
