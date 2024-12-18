@@ -11,7 +11,9 @@ async function bootstrap() {
   //const port = parseInt(process.env.SERVERPORT || '4000', 10);
 
   // Use Render's PORT environment variable or SERVERPORT for local
-  const port = parseInt(process.env.PORT || process.env.SERVERPORT || '3000', 10);
+  const port = parseInt(process.env.PORT || '3000', 10);
+  console.log("Using port:", process.env.PORT);
+
 
   // Set up Swagger documentation
   setupSwagger(app, port);
