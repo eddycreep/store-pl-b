@@ -7,9 +7,9 @@ const swagger_1 = require("./utils/swagger");
 dotenv.config();
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const port = parseInt(process.env.SERVERPORT || '4000', 10);
+    const port = parseInt(process.env.PORT || process.env.SERVERPORT || '3000', 10);
     (0, swagger_1.setupSwagger)(app, port);
-    await app.listen(port);
+    await app.listen(port, '0.0.0.0');
     console.log(`Application is running on: http://localhost:${port}`);
 }
 bootstrap();
