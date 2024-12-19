@@ -1,9 +1,8 @@
-// src/utils/swagger.ts
-
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication, port: number) {
+
   // Define the Swagger configuration
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Store API Docs') // Set the title for the Swagger UI
