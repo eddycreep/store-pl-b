@@ -1,8 +1,7 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
+import { BadRequestException } from '@nestjs/common';
 
 @ApiTags('Products')
 @Controller('products')
@@ -41,9 +40,7 @@ export class ProductsController {
         }
     }
 
-    /**
-   * API to fetch active combined product specials.
-   */
+
     @Get('getactivecombinedspecials')
     @ApiOperation({ summary: 'Retrieve active combined product specials' })
     async getActiveCombinedSpecials() {
