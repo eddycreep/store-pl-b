@@ -67,16 +67,14 @@ export class ProductsService {
 
     async getActiveCombinedSpecials() {
         const query = `
-            SELECT sp.special_id, sp.special, sp.special_type, sp.store_id, 
-                    sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, 
-                    scg.product_description, scg.special_price
+            SELECT sp.special_id, sp.special, sp.special_type, sp.store_id, sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, scg.product_description, scg.special_price
             FROM loyalty_program.tblspecials sp
             JOIN loyalty_program.tblspecials_combinedgroup scg 
             ON sp.special_id = scg.special_id
             WHERE sp.special_type = 'Combined Special' 
             AND sp.isActive = 1 
             AND sp.start_date <= CURDATE() 
-            AND sp.expiry_date >= CURDATE();
+            AND sp.expiry_date >= CURDATE()
         `;
 
         try {
@@ -90,22 +88,20 @@ export class ProductsService {
 
     async getUpcomingCombinedSpecials() {
         const query = `
-        SELECT sp.special_id, sp.special, sp.special_type, sp.store_id, 
-                sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, 
-                scg.product_description, scg.special_price
-        FROM loyalty_program.tblspecials sp
-        JOIN loyalty_program.tblspecials_combinedgroup scg 
-        ON sp.special_id = scg.special_id
-        WHERE sp.special_type = 'Combined Special' 
+            SELECT sp.special_id, sp.special, sp.special_type, sp.store_id, sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, scg.product_description, scg.special_price
+            FROM loyalty_program.tblspecials sp
+            JOIN loyalty_program.tblspecials_combinedgroup scg 
+            ON sp.special_id = scg.special_id
+            WHERE sp.special_type = 'Combined Special' 
             AND sp.isActive = 1 
-            AND sp.start_date >= CURDATE();
+            AND sp.start_date >= CURDATE()
         `;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching upcoming combined specials:', error.message);
-        throw new BadRequestException('Error fetching upcoming combined specials: ' + error.message);
+            console.error('Error fetching upcoming combined specials:', error.message);
+            throw new BadRequestException('Error fetching upcoming combined specials: ' + error.message);
         }
     }
 
@@ -142,30 +138,19 @@ export class ProductsService {
 
     // Retrieves all active specials
     async getAllActiveSpecials() {
-        const query = `
-            SELECT special_id, special_name, special, special_type, store_id, 
-            start_date, expiry_date, special_value, isActive 
-            FROM loyalty_program.tblspecials 
-            WHERE isActive = 1 
-            AND start_date <= CURDATE() 
-            AND expiry_date >= CURDATE()`;
+        const query = `SELECT special_id, special_name, special, special_type, store_id, start_date, expiry_date, special_value, isActive FROM loyalty_program.tblspecials WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching all active specials:', error.message);
-        throw new BadRequestException('Error fetching all active specials: ' + error.message);
+            console.error('Error fetching all active specials:', error.message);
+            throw new BadRequestException('Error fetching all active specials: ' + error.message);
         }
     }
 
     // Retrieves all upcoming specials
-    async getUpcomingSpecials() {
-        const query = `
-            SELECT special_id, special_name, special, special_type, store_id, 
-            start_date, expiry_date, special_value, isActive 
-            FROM loyalty_program.tblspecials 
-            WHERE isActive = 1 
-            AND start_date >= CURDATE()`;
+    async getAllUpcomingSpecials() {
+        const query = `SELECT special_id, special_name, special, special_type, store_id, start_date, expiry_date, special_value, isActive FROM loyalty_program.tblspecials WHERE isActive = 1 AND start_date >= CURDATE()`;
 
         try {
             return await this.databaseService.query(query, null);
@@ -179,13 +164,7 @@ export class ProductsService {
 
     // Retrieves active rewards
     async getActiveRewards() {
-        const query = `
-            SELECT reward_id, reward_title, description, reward, reward_type, reward_price, 
-            store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive 
-            FROM loyalty_program.tblrewards 
-            WHERE isActive = 1 
-            AND start_date <= CURDATE() 
-            AND expiry_date >= CURDATE()`;
+        const query = `SELECT reward_id, reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive FROM loyalty_program.tblrewards WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
 
         try {
             return await this.databaseService.query(query, null);
@@ -197,115 +176,74 @@ export class ProductsService {
 
     // Retrieves upcoming rewards
     async getUpcomingRewards() {
-        const query = `
-            SELECT reward_id, reward_title, description, reward, reward_type, reward_price, 
-            store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive 
-            FROM loyalty_program.tblrewards 
-            WHERE isActive = 1 
-            AND start_date >= CURDATE()`;
+        const query = `SELECT reward_id, reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive FROM loyalty_program.tblrewards WHERE isActive = 1 AND start_date >= CURDATE()`;
 
         try {
             return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching upcoming rewards:', error.message);
+            console.error('Error fetching upcoming rewards:', error.message);
             throw new BadRequestException('Error fetching upcoming rewards: ' + error.message);
         }
     }
 
     //SURVEYS
 
-    /**
-   * Retrieves active surveys.
-   * @returns {Promise<any[]>} List of active surveys.
-   */
     async getActiveSurveys() {
-        const query = `
-        SELECT survey_id, survey_title, survey_category, store_id, region, 
-                loyalty_tier, start_date, expiry_date, isActive 
-        FROM loyalty_program.tblsurvey 
-        WHERE isActive = 1 
-            AND start_date <= CURDATE() 
-            AND expiry_date >= CURDATE()`;
+        const query = `SELECT survey_id, survey_title, survey_category, store_id, region, loyalty_tier, start_date, expiry_date, isActive FROM loyalty_program.tblsurvey WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching active surveys:', error.message);
-        throw new BadRequestException('Error fetching active surveys: ' + error.message);
+            console.error('Error fetching active surveys:', error.message);
+            throw new BadRequestException('Error fetching active surveys: ' + error.message);
         }
     }
 
-    /**
-     * Retrieves upcoming surveys.
-     * @returns {Promise<any[]>} List of upcoming surveys.
-     */
+
     async getUpcomingSurveys() {
-        const query = `
-        SELECT survey_id, survey_title, survey_category, store_id, region, 
-                loyalty_tier, start_date, expiry_date, isActive 
-        FROM loyalty_program.tblsurvey 
-        WHERE isActive = 1 
-            AND start_date >= CURDATE()`;
+        const query = `SELECT survey_id, survey_title, survey_category, store_id, region, loyalty_tier, start_date, expiry_date, isActive FROM loyalty_program.tblsurvey WHERE isActive = 1 AND start_date >= CURDATE()`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching upcoming surveys:', error.message);
-        throw new BadRequestException('Error fetching upcoming surveys: ' + error.message);
+            console.error('Error fetching upcoming surveys:', error.message);
+            throw new BadRequestException('Error fetching upcoming surveys: ' + error.message);
         }
     }
 
-    /**
-     * Retrieves stores.
-     * @returns {Promise<any[]>} List of stores.
-     */
+
     async getStores() {
-        const query = `
-        SELECT id, code, description, address_1, address_2, address_3, 
-                address_4, address_5, address_6 
-        FROM loyalty_program.tblmultistore`;
+        const query = `SELECT id, code, description, address_1, address_2, address_3, address_4, address_5, address_6 FROM loyalty_program.tblmultistore`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching stores:', error.message);
-        throw new BadRequestException('Error fetching stores: ' + error.message);
+            console.error('Error fetching stores:', error.message);
+            throw new BadRequestException('Error fetching stores: ' + error.message);
         }
     }
 
-    /**
-     * Retrieves customers.
-     * @returns {Promise<any[]>} List of customers.
-     */
+
     async getCustomers() {
-        const query = `
-        SELECT ID, Code, Description, Address01, Address02, Address03, 
-                Address04, Address05, Address06, Address07, birth_day 
-        FROM loyalty_program.tblcustomers`;
+        const query = `SELECT ID, Code, Description, Address01, Address02, Address03, Address04, Address05, Address06, Address07, birth_day FROM loyalty_program.tblcustomers`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching customers:', error.message);
-        throw new BadRequestException('Error fetching customers: ' + error.message);
+            console.error('Error fetching customers:', error.message);
+            throw new BadRequestException('Error fetching customers: ' + error.message);
         }
     }
 
-    /**
-     * Retrieves customers on the loyalty system.
-     * @returns {Promise<any[]>} List of loyalty customers.
-     */
+
     async getLoyaltyCustomers() {
-        const query = `
-        SELECT CustomerID, FirstName, LastName, MobileNumber, Age, Gender, 
-                Birthday, Ethnicity, EmploymentStatus, Email, LoyaltyTier 
-        FROM loyalty_program.tblloyaltycustomers`;
+        const query = `SELECT CustomerID, FirstName, LastName, MobileNumber, Age, Gender, Birthday, Ethnicity, EmploymentStatus, Email, LoyaltyTier FROM loyalty_program.tblloyaltycustomers`;
 
         try {
-        return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, null);
         } catch (error) {
-        console.error('Error fetching loyalty customers:', error.message);
-        throw new BadRequestException('Error fetching loyalty customers: ' + error.message);
+            console.error('Error fetching loyalty customers:', error.message);
+            throw new BadRequestException('Error fetching loyalty customers: ' + error.message);
         }
     }
 }

@@ -10,7 +10,7 @@ export declare class ProductsService {
     getAllProductSpecials(): Promise<import("mysql2").QueryResult>;
     getAllCombinedSpecials(): Promise<import("mysql2").QueryResult>;
     getAllActiveSpecials(): Promise<import("mysql2").QueryResult>;
-    getUpcomingSpecials(): Promise<import("mysql2").QueryResult>;
+    getAllUpcomingSpecials(): Promise<import("mysql2").QueryResult>;
     getActiveRewards(): Promise<import("mysql2").QueryResult>;
     getUpcomingRewards(): Promise<import("mysql2").QueryResult>;
     getActiveSurveys(): Promise<import("mysql2").QueryResult>;
