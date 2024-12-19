@@ -1,12 +1,6 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-
-import { ProductstDto, ActiveProductSpecialsDto, UpcomingProductSpecialsDto,
-ActiveCombinedSpecialsDto, UpcomingCombinedSpecialsDto, AllProductSpecialsDto, AllCombinedSpecialsDto, 
-AllSpecialsDto, UpcomingSpecialsDto, ActiveRewardsDto, UpcomingRewardsDto, ActiveSurveysDto, 
-UpcomingSurveysDto, StoresDto, LoyaltyCustomersDto } from './dto/products.dto';
-
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 
@@ -71,41 +65,38 @@ export class ProductsController {
         }
     }
 
-    @Get('getAllProductSpecials')
+    @Get('getallproductSpecials')
     @ApiOperation({ summary: 'Retrieve all product specials' })
     @ApiResponse({ status: 200, description: 'List of all product specials.' })
-
     async getAllProductSpecials() {
         return await this.productsService.getAllProductSpecials();
     }
 
-    @Get('getAllCombinedSpecials')
+    @Get('getallcombinedspecials')
     @ApiOperation({ summary: 'Retrieve all combined specials' })
     @ApiResponse({ status: 200, description: 'List of all combined specials.' })
-
     async getAllCombinedSpecials() {
         return await this.productsService.getAllCombinedSpecials();
     }
 
-    @Get('getAllActiveSpecials')
+    @Get('getallactivespecials')
     @ApiOperation({ summary: 'Retrieve all active specials' })
     @ApiResponse({ status: 200, description: 'List of all active specials.' })
-
     async getAllActiveSpecials() {
         return await this.productsService.getAllActiveSpecials();
     }
 
-    @Get('getUpcomingSpecials')
+    @Get('getallupcomingspecials')
     @ApiOperation({ summary: 'Retrieve all upcoming specials' })
     @ApiResponse({ status: 200, description: 'List of all upcoming specials.' })
 
     async getUpcomingSpecials() {
-        return await this.productsService.getUpcomingSpecials();
+        return await this.productsService.getAllUpcomingSpecials();
     }
 
     //REWARDS
 
-    @Get('getActiveRewards')
+    @Get('getactiverewards')
     @ApiOperation({ summary: 'Retrieve active rewards' })
     @ApiResponse({ status: 200, description: 'List of all active rewards.' })
 
@@ -113,7 +104,7 @@ export class ProductsController {
         return await this.productsService.getActiveRewards();
     }
 
-    @Get('getUpcomingRewards')
+    @Get('getupcomingrewards')
     @ApiOperation({ summary: 'Retrieve upcoming rewards' })
     @ApiResponse({ status: 200, description: 'List of all upcoming rewards.' })
 
@@ -121,37 +112,42 @@ export class ProductsController {
         return await this.productsService.getUpcomingRewards();
     }
 
-    @Get('getActiveSurveys')
+    @Get('getactivesurveys')
     @ApiOperation({ summary: 'Retrieve active surveys' })
     @ApiResponse({ status: 200, description: 'List of active surveys.' })
+
     async getActiveSurveys() {
         return await this.productsService.getActiveSurveys();
     }
 
-    @Get('getUpcomingSurveys')
+    @Get('getupcomingsurveys')
     @ApiOperation({ summary: 'Retrieve upcoming surveys' })
     @ApiResponse({ status: 200, description: 'List of upcoming surveys.' })
+
     async getUpcomingSurveys() {
         return await this.productsService.getUpcomingSurveys();
     }
 
-    @Get('getStores')
+    @Get('getstores')
     @ApiOperation({ summary: 'Retrieve stores' })
     @ApiResponse({ status: 200, description: 'List of stores.' })
+
     async getStores() {
         return await this.productsService.getStores();
     }
 
-    @Get('getCustomers')
+    @Get('getcustomers')
     @ApiOperation({ summary: 'Retrieve customers' })
     @ApiResponse({ status: 200, description: 'List of customers.' })
+
     async getCustomers() {
         return await this.productsService.getCustomers();
     }
 
-    @Get('getLoyaltyCustomers')
+    @Get('getloyaltycustomers')
     @ApiOperation({ summary: 'Retrieve loyalty customers' })
     @ApiResponse({ status: 200, description: 'List of loyalty customers.' })
+
     async getLoyaltyCustomers() {
         return await this.productsService.getLoyaltyCustomers();
     }

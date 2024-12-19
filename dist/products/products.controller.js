@@ -69,7 +69,7 @@ let ProductsController = class ProductsController {
         return await this.productsService.getAllActiveSpecials();
     }
     async getUpcomingSpecials() {
-        return await this.productsService.getUpcomingSpecials();
+        return await this.productsService.getAllUpcomingSpecials();
     }
     async getActiveRewards() {
         return await this.productsService.getActiveRewards();
@@ -129,7 +129,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getUpcomingCombinedSpecials", null);
 __decorate([
-    (0, common_1.Get)('getAllProductSpecials'),
+    (0, common_1.Get)('getallproductSpecials'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve all product specials' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all product specials.' }),
     __metadata("design:type", Function),
@@ -137,7 +137,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getAllProductSpecials", null);
 __decorate([
-    (0, common_1.Get)('getAllCombinedSpecials'),
+    (0, common_1.Get)('getallcombinedspecials'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve all combined specials' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all combined specials.' }),
     __metadata("design:type", Function),
@@ -145,7 +145,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getAllCombinedSpecials", null);
 __decorate([
-    (0, common_1.Get)('getAllActiveSpecials'),
+    (0, common_1.Get)('getallactivespecials'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve all active specials' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all active specials.' }),
     __metadata("design:type", Function),
@@ -153,7 +153,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getAllActiveSpecials", null);
 __decorate([
-    (0, common_1.Get)('getUpcomingSpecials'),
+    (0, common_1.Get)('getallupcomingspecials'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve all upcoming specials' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all upcoming specials.' }),
     __metadata("design:type", Function),
@@ -161,7 +161,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getUpcomingSpecials", null);
 __decorate([
-    (0, common_1.Get)('getActiveRewards'),
+    (0, common_1.Get)('getactiverewards'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve active rewards' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all active rewards.' }),
     __metadata("design:type", Function),
@@ -169,7 +169,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getActiveRewards", null);
 __decorate([
-    (0, common_1.Get)('getUpcomingRewards'),
+    (0, common_1.Get)('getupcomingrewards'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve upcoming rewards' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all upcoming rewards.' }),
     __metadata("design:type", Function),
@@ -177,7 +177,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getUpcomingRewards", null);
 __decorate([
-    (0, common_1.Get)('getActiveSurveys'),
+    (0, common_1.Get)('getactivesurveys'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve active surveys' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of active surveys.' }),
     __metadata("design:type", Function),
@@ -185,7 +185,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getActiveSurveys", null);
 __decorate([
-    (0, common_1.Get)('getUpcomingSurveys'),
+    (0, common_1.Get)('getupcomingsurveys'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve upcoming surveys' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of upcoming surveys.' }),
     __metadata("design:type", Function),
@@ -193,7 +193,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getUpcomingSurveys", null);
 __decorate([
-    (0, common_1.Get)('getStores'),
+    (0, common_1.Get)('getstores'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve stores' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of stores.' }),
     __metadata("design:type", Function),
@@ -201,7 +201,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getStores", null);
 __decorate([
-    (0, common_1.Get)('getCustomers'),
+    (0, common_1.Get)('getcustomers'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve customers' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of customers.' }),
     __metadata("design:type", Function),
@@ -209,7 +209,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getCustomers", null);
 __decorate([
-    (0, common_1.Get)('getLoyaltyCustomers'),
+    (0, common_1.Get)('getloyaltycustomers'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve loyalty customers' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of loyalty customers.' }),
     __metadata("design:type", Function),
