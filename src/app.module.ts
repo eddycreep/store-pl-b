@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { BasketModule } from './basket/basket.module';
 import { DatabaseModule } from './database/database.module';
 import { ProductsModule } from './products/products.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { ProductsModule } from './products/products.module';
     // Import application modules
     UsersModule,   // Module for managing users
     BasketModule,  // Module for basket-related functionality
-    DatabaseModule, ProductsModule // Module for database configuration and connection
+    DatabaseModule, ProductsModule, AdminModule // Module for database configuration and connection
   ],
   controllers: [AppController], // Include main application controller
   providers: [AppService],      // Include main application service
