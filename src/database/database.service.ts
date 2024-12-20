@@ -14,7 +14,7 @@ export class DatabaseService implements OnModuleInit {
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-      connectTimeout: 120000, // Timeout of 10 seconds
+      connectTimeout: 120000,
   });  
   }
 

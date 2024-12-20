@@ -1,4 +1,5 @@
 import { IsString, IsNumber } from 'class-validator';
+import { PartialType } from "@nestjs/mapped-types"; 
 
 export class SaveSpecialDto {
     @IsString() special_name: string;
@@ -18,38 +19,18 @@ export class SaveSpecialItemsDto {
     @IsNumber() special_price: number;
 }
 
-export class SaveSpecialCombinedItemsDto {
+export class SaveCombinedSpecialItemsDto {
     @IsNumber() special_id: number;
     @IsNumber() special_group_id: number;
-    @IsString() item_code: string;
     @IsString() product_description: string;
     @IsNumber() special_price: number;
 }
 
-//CHANGE
-export class updateSpecialDto {
-    @IsString() special_name?: string;
-    @IsString() special?: string;
-    @IsString() special_type?: string;
-    @IsString() store_id?: string;
-    @IsString() start_date?: string;
-    @IsString() expiry_date?: string;
-    @IsString() special_value?: string;
-    @IsNumber() isActive?: number;
-}
 
-//CHANGE
-export class UpdateSpecialItemsDto {
-    @IsString() product_description?: string;
-    @IsString() special_price?: number;
-}
+export class UpdateSpecialDto extends PartialType(SaveSpecialDto) {}
+export class UpdateSpecialItemsDto extends PartialType(SaveSpecialItemsDto) {}
+export class UpdateCombinedSpecialItemsDto extends PartialType(SaveCombinedSpecialItemsDto) {}
 
-//CHANGE
-export class UpdateCombinedSpecialItems {
-    @IsString() special_group_id?: number;
-    @IsString() product_description?: string;
-    @IsNumber() special_price?: number;
-}
 
 //REWARDS
 
@@ -86,16 +67,41 @@ export class SaveRewardsDto {
 }
 
 
-// export class AllSurveysDto {
-//     survey_id, survey_title, survey_category, store_id, region, loyalty_tier, start_date, expiry_date, isActive
-// }
+export class GetSurveysDto {
+    @IsNumber() survey_id: number;
+    @IsString() survey_title: string;
+    @IsString() survey_category: string;
+    @IsString() store_id: string;
+    @IsString() region: string;
+    @IsString() loyalty_tier: string;
+    @IsString() start_date: string;
+    @IsString() expiry_date: string;
+    @IsNumber() isActive: number;
+}
 
+
+export class SaveSurveyDto {
+    @IsString() survey_title: string;
+    @IsString() survey_category: string;
+    @IsString() store_id: string;
+    @IsString() region: string;
+    @IsString() loyalty_tier: string;
+    @IsString() start_date: string;
+    @IsString() expiry_date: string;
+    @IsNumber() isActive: number;
+}
+
+export class UpdateSurveyDto extends PartialType(SaveSurveyDto) {}
 
 
 export class GetSurveyIdDto {
     @IsNumber() survey_id: number;
 }
 
-// export class SaveSurveyQuestions {
-//     survey_id, question_text, question_type
-// }
+export class SaveSurveyQuestions {
+    survey_id: number;
+    question_text: string;
+    question_type: string;
+}
+
+export class UpdateSurveyQuestionsDto extends PartialType(SaveSurveyQuestions) {} //update survey questions

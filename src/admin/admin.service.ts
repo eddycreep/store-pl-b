@@ -1,20 +1,78 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { SaveSpecialDto, SaveSpecialItemsDto, SaveCombinedSpecialItemsDto, UpdateSpecialDto } from './dto/admin.dto';
 
 @Injectable()
 export class AdminService {
     constructor(private readonly databaseService: DatabaseService) {}
 
-    async getProducts() {
-        const query = `SELECT mst.id, mst.item_code, mst.selling_incl_1, mst.special_price_incl, inv.description_1 FROM loyalty_program.tblmultistoretrn mst JOIN loyalty_program.tblinventory inv ON mst.item_code = inv.item_code`;
+    async saveSpecial(data: SaveSpecialDto) {
+        const query = `INSERT INTO loyalty_program.tblspecials (special_name, special, special_type, store_id, start_date, expiry_date, special_value, isActive)VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
         try {
-            // Pass `null` as the second argument for the parameters
-            return await this.databaseService.query(query, null);
+            return await this.databaseService.query(query, Object.values(data));
         } catch (error) {
-            console.error('Error fetching products:', error.message);
-            throw new BadRequestException('Error fetching products: ' + error.message);
+            console.error('Error saving special:', error.message);
+            throw new BadRequestException('Unable to save special');
         }
     }
+
+    async getSpecialID(specialName: string) {
+        const query = `SELECT special_id FROM loyalty_program.tblspecials WHERE special_name = ?`;
+    
+        try {
+            const result: any = await this.databaseService.query(query, [specialName]);
+    
+            // Ensure `result` is an array (typical for SELECT queries)
+            if (!Array.isArray(result) || result.length === 0) {
+                throw new NotFoundException('Special ID not found');
+            }
+    
+            return result[0];
+        } catch (error) {
+            console.error('Error retrieving special ID:', error.message);
+            throw error;
+        }
+    }
+    
+
+    async saveSpecialItems(saveSpecialItemsDto: SaveSpecialItemsDto) {
+        const query = `INSERT INTO loyalty_program.tblspecialitems (special_id, product_description, special_price)VALUES (?, ?, ?)`;
+        
+        try {
+            return await this.databaseService.query(query, Object.values(saveSpecialItemsDto));
+        } catch (error) {
+            console.error('Error saving product special items:', error.message);
+            throw new BadRequestException('Unable to save product special items');
+        }
+    }
+
+    async saveCombinedSpecialItems(saveCombinedSpecialItemsDto: SaveCombinedSpecialItemsDto) {
+        const query = `INSERT INTO loyalty_program.tblspecials_combinedgroup (special_id, special_group_id, product_description, special_price)VALUES (?, ?, ?, ?)`;
+
+        try {
+            return await this.databaseService.query(query, Object.values(saveCombinedSpecialItemsDto));
+        } catch (error) {
+            console.error('Error saving combined special items:', error.message);
+            throw new BadRequestException('Unable to save combined special items');
+        }
+    }
+
+    /**
+     * Update an existing special
+     * @param specialId - ID of the special to update
+     * @param data - Updated special details from updateSpecialDto
+     */
+    // async updateSpecial(specialId: number, updateSpecialDto: UpdateSpecialDto) {
+    //     const query = `UPDATE loyalty_program.tblspecials SET special_name = ?, special = ?, special_type = ?, store_id = ?, start_date = ?, expiry_date = ?, special_value = ?, isActive = ? WHERE special_id = ?`;
+
+    //     try {
+    //         const result = await this.databaseService.query(query, [...Object.values(updateSpecialDto), specialId]);
+    //         if (result === 0) throw new NotFoundException('Special not found');
+    //         return result;
+    //     } catch (error) {
+    //         console.error('Error updating special:', error.message);
+    //         throw error;
+    //     }
+    // }
 }
