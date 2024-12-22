@@ -57,22 +57,4 @@ export class AdminService {
             throw new BadRequestException('Unable to save combined special items');
         }
     }
-
-    /**
-     * Update an existing special
-     * @param specialId - ID of the special to update
-     * @param data - Updated special details from updateSpecialDto
-     */
-    // async updateSpecial(specialId: number, updateSpecialDto: UpdateSpecialDto) {
-    //     const query = `UPDATE loyalty_program.tblspecials SET special_name = ?, special = ?, special_type = ?, store_id = ?, start_date = ?, expiry_date = ?, special_value = ?, isActive = ? WHERE special_id = ?`;
-
-    //     try {
-    //         const result = await this.databaseService.query(query, [...Object.values(updateSpecialDto), specialId]);
-    //         if (result === 0) throw new NotFoundException('Special not found');
-    //         return result;
-    //     } catch (error) {
-    //         console.error('Error updating special:', error.message);
-    //         throw error;
-    //     }
-    // }
 }
