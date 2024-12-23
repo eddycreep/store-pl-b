@@ -16,7 +16,6 @@ exports.BasketController = void 0;
 const common_1 = require("@nestjs/common");
 const basket_service_1 = require("./basket.service");
 const basket_dto_1 = require("./dto/basket.dto");
-const common_2 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 let BasketController = class BasketController {
     constructor(basketService) {
@@ -32,7 +31,7 @@ let BasketController = class BasketController {
         }
         catch (error) {
             console.error('Error in controller:', error.message);
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async checkLoyaltyCustomer(customerId) {
@@ -40,7 +39,7 @@ let BasketController = class BasketController {
             return await this.basketService.checkLoyaltyCustomer(customerId);
         }
         catch (error) {
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async checkProductSpecials(productDescription) {
@@ -49,7 +48,7 @@ let BasketController = class BasketController {
             return await this.basketService.checkProductSpecials(products);
         }
         catch (error) {
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async checkCombinedProductSpecials(productDescription) {
@@ -58,7 +57,7 @@ let BasketController = class BasketController {
             return await this.basketService.checkCombinedProductSpecials(products);
         }
         catch (error) {
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async fetchProductPrices(productDescription) {
@@ -67,7 +66,7 @@ let BasketController = class BasketController {
             return await this.basketService.fetchProductPrices(products);
         }
         catch (error) {
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async saveFinalTransaction(finalTransactionDto) {
@@ -75,7 +74,7 @@ let BasketController = class BasketController {
             return await this.basketService.saveFinalTransaction(finalTransactionDto);
         }
         catch (error) {
-            throw new common_2.BadRequestException(error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
 };

@@ -13,23 +13,23 @@ export class BasketService {
   ) {}
 
   async saveCustomerBasket(CustomerBasketDto: CustomerBasketDto) {
-    const { basket_id, customer_id, product, quantity, purchase_date, total_amount, payment_method } = CustomerBasketDto;
+    const { basket_id, customer_id, card_number, product, quantity, purchase_date, total_amount, payment_method } = CustomerBasketDto;
 
     // Format purchase_date to the required format
     const formattedPurchaseDate = format(new Date(purchase_date), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
     
     // SQL query for saving basket information
-    const query = `INSERT INTO loyalty_program.tblbasketinfo(basket_id, customer_id, purchase_date, total_amount, payment_method)VALUES (?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO loyalty_program.tblbasketinfo(basket_id, customer_id, card_number, purchase_date, total_amount, payment_method)VALUES (?, ?, ?, ?, ?, ?)`;
 
     try {
       // Save basket data
-      await this.databaseService.query(query, [basket_id, customer_id, formattedPurchaseDate, total_amount, payment_method]);
+      await this.databaseService.query(query, [basket_id, customer_id, card_number, formattedPurchaseDate, total_amount, payment_method]);
       
 
       // Trigger event to save basket items
       this.eventEmitter.emit('save-basket-items', CustomerBasketDto);
 
-      return this.databaseService.query(query, [basket_id, customer_id, formattedPurchaseDate, total_amount, payment_method]);
+      return this.databaseService.query(query, [basket_id, customer_id, card_number, formattedPurchaseDate, total_amount, payment_method]);
     } catch (error) {
       throw new BadRequestException('Error saving customer basket: ' + error.message);
     }

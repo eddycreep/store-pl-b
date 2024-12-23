@@ -24,6 +24,10 @@ __decorate([
 ], CustomerBasketDto.prototype, "customer_id", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CustomerBasketDto.prototype, "card_number", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", Array)
 ], CustomerBasketDto.prototype, "product", void 0);
 __decorate([

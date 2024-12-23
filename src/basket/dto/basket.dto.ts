@@ -4,6 +4,7 @@ import { Type } from 'class-transformer';
 export class CustomerBasketDto {
   @IsNumber() basket_id: number;
   @IsNumber() customer_id: number;
+  @IsString() card_number: string;
   @IsString() product: [];
   @IsNumber() quantity: number;
   @IsString() purchase_date: string;

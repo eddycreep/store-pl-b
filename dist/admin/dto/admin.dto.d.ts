@@ -57,6 +57,9 @@ export declare class SaveRewardsDto {
     age_group: string;
     isActive: number;
 }
+declare const UpdateRewardsDto_base: import("@nestjs/mapped-types").MappedType<Partial<SaveRewardsDto>>;
+export declare class UpdateRewardsDto extends UpdateRewardsDto_base {
+}
 export declare class GetSurveysDto {
     survey_id: number;
     survey_title: string;
@@ -84,12 +87,12 @@ export declare class UpdateSurveyDto extends UpdateSurveyDto_base {
 export declare class GetSurveyIdDto {
     survey_id: number;
 }
-export declare class SaveSurveyQuestions {
+export declare class SaveSurveyQuestionsDto {
     survey_id: number;
     question_text: string;
     question_type: string;
 }
-declare const UpdateSurveyQuestionsDto_base: import("@nestjs/mapped-types").MappedType<Partial<SaveSurveyQuestions>>;
+declare const UpdateSurveyQuestionsDto_base: import("@nestjs/mapped-types").MappedType<Partial<SaveSurveyQuestionsDto>>;
 export declare class UpdateSurveyQuestionsDto extends UpdateSurveyQuestionsDto_base {
 }
 export {};
