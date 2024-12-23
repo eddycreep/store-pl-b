@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Patch, Param, Body, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
 import { BasketService } from './basket.service';
-import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, UpdateBasketItemPricesDto, FinalTransactionDto } from './dto/basket.dto';
+import { CustomerBasketDto, SaveBasketItemsDto, FinalTransactionDto, BasketItemsDiscDto } from './dto/basket.dto';
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Basket') // Swagger tag
@@ -106,53 +106,48 @@ export class BasketController {
       }
     }
   
-    // @Get('check-product-specials/:product_description')
-    // async checkProductSpecials(@Param('product_description') productDescription: string) {
-    //     try {
-    //         // Split the comma-separated string into an array
-    //         const products = productDescription.split(',').map(item => item.trim());
-    //         return await this.basketService.checkProductSpecials(products);
-    //     } catch (error) {
-    //         throw new BadRequestException(error.message);
-    //     }
-    // }
+    @Get('check-product-specials/:product_description')
+    async checkProductSpecials(@Param('product_description') productDescription: string) {
+        try {
+            // Split the comma-separated string into an array
+            const products = productDescription.split(',').map(item => item.trim());
+            return await this.basketService.checkProductSpecials(products);
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
+    }
 
 
-    // @Get('check-combined-specials/:product_description')
-    // async checkCombinedProductSpecials(@Param('product_description') productDescription: string) {
-    //     try {
-    //         // Split the comma-separated string into an array
-    //         const products = productDescription.split(',').map(item => item.trim());
-    //         return await this.basketService.checkCombinedProductSpecials(products);
-    //     } catch (error) {
-    //         throw new BadRequestException(error.message);
-    //     }
-    // }
+    @Get('check-combined-specials/:product_description')
+    async checkCombinedSpecials(@Param('product_description') productDescription: string) {
+        try {
+            // Split the comma-separated string into an array
+            const products = productDescription.split(',').map(item => item.trim());
+            return await this.basketService.checkCombinedSpecials(products);
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
+    }
 
-
-    // @Get('fetch-product-prices/:product_description')
-    // async fetchProductPrices(@Param('product_description') productDescription: string) {
-    //     try {
-    //         // Split the comma-separated string into an array
-    //         const products = productDescription.split(',').map(item => item.trim());
-    //         return await this.basketService.fetchProductPrices(products);
-    //     } catch (error) {
-    //         throw new BadRequestException(error.message);
-    //     }
-    // }
-
-    // @Patch('update-basket-item-prices/:basket_id')
-    // async updateBasketItemPrices(@Param('basket_id') basketId: number, @Body() updateBasketItemPricesDto: UpdateBasketItemPricesDto) {
-    //     return this.basketService.updateBasketItemPrices(basketId, updateBasketItemPricesDto);
-    // }
+    @Patch('update-basket-disc-prices')
+    async updateBasketItemsDisc(
+      @Body() basketItemsDiscDtos: BasketItemsDiscDto[]
+    ) {
+      try {
+        return await this.basketService.updateBasketItemsDisc(basketItemsDiscDtos);
+      } catch (error) {
+        throw new BadRequestException(error.message);
+      }
+    }
     
-    // @Post('save-final-transaction')
-    // async saveFinalTransaction(@Body() finalTransactionDto: FinalTransactionDto) {
-    //   try {
-    //     return await this.basketService.saveFinalTransaction(finalTransactionDto);
+    
+    @Post('save-final-transaction')
+    async saveFinalTransaction(@Body() finalTransactionDto: FinalTransactionDto) {
+      try {
+        return await this.basketService.saveFinalTransaction(finalTransactionDto);
         
-    //   } catch (error) {
-    //     throw new BadRequestException(error.message);
-    //   }
-    // }
+      } catch (error) {
+        throw new BadRequestException(error.message);
+      }
+    }
 }

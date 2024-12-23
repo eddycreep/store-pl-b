@@ -105,10 +105,108 @@ let BasketService = class BasketService {
             if (results.length === 0) {
                 throw new common_1.NotFoundException('Customer not found on the loyalty program');
             }
+            this.eventEmitter.emit('check.product.specials');
             return results;
         }
         catch (error) {
             throw new common_1.BadRequestException('Error checking loyalty customer: ' + error.message);
+        }
+    }
+    async checkProductSpecials(products) {
+        const query = `SELECT 
+                    sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
+                    sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
+                    spi.product_description, spi.special_price
+                    FROM loyalty_program.tblspecials sp
+                    JOIN loyalty_program.tblspecialitems spi
+                    ON sp.special_id = spi.special_id
+                    WHERE sp.special_type = 'Special' 
+                    AND sp.isActive = 1 
+                    AND spi.product_description IN (?) 
+                    AND sp.start_date <= CURDATE() 
+                    AND sp.expiry_date >= CURDATE()`;
+        try {
+            const specials = await Promise.all(products.map(async (product) => {
+                const results = await this.databaseService.query(query, [product]);
+                return results;
+            }));
+            this.eventEmitter.emit('check.combined.specials');
+            return specials.flat();
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error fetching product specials: ' + error.message);
+        }
+    }
+    async checkCombinedSpecials(products) {
+        const query = `SELECT 
+                      sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
+                      sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
+                      spcg.special_group_id, spcg.product_description, spcg.special_price
+                  FROM 
+                      loyalty_program.tblspecials sp
+                  JOIN 
+                      loyalty_program.tblspecials_combinedgroup spcg 
+                  ON 
+                      sp.special_id = spcg.special_id
+                  WHERE 
+                      sp.special_type = 'Combined Special' 
+                      AND sp.isActive = 1 
+                      AND spcg.product_description IN (?) 
+                      AND sp.start_date <= CURDATE() 
+                      AND sp.expiry_date >= CURDATE()`;
+        try {
+            const combinedSpecials = await Promise.all(products.map(async (product) => {
+                const results = await this.databaseService.query(query, [product]);
+                return results;
+            }));
+            return combinedSpecials.flat();
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error fetching combined specials: ' + error.message);
+        }
+    }
+    async updateBasketItemsDisc(basketItemsDiscDtos) {
+        const query = `
+      UPDATE loyalty_program.tblbasketinfo_items
+      SET discount_applied = ?, final_price = ?
+      WHERE product = ? AND basket_id = ?`;
+        try {
+            for (const item of basketItemsDiscDtos) {
+                const { basket_id, product, discount_applied, final_price } = item;
+                await this.databaseService.query(query, [
+                    discount_applied,
+                    final_price,
+                    product,
+                    basket_id
+                ]);
+            }
+            return {
+                message: `${basketItemsDiscDtos.length} Basket Items discounted prices updated successfully`,
+            };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error updating the basket items with their discounted prices: ' + error.message);
+        }
+    }
+    async saveFinalTransaction(finalTransactionDto) {
+        const { basket_id, customer_id, card_number, basket_quantity, total_basket_amount, disc_total_basket_amount, payment_method, purchase_date } = finalTransactionDto;
+        const formattedPurchaseDate = (0, date_fns_1.format)(new Date(purchase_date), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
+        const query = `INSERT INTO loyalty_program.tblfinaltransaction(basket_id, customer_id, card_number, basket_quantity, total_basket_amount, disc_total_basket_amount, payment_method, purchase_date)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
+        try {
+            await this.databaseService.query(query, [
+                basket_id,
+                customer_id,
+                card_number,
+                basket_quantity,
+                total_basket_amount,
+                disc_total_basket_amount,
+                payment_method,
+                formattedPurchaseDate,
+            ]);
+            return { message: 'Customers Final Transaction was successfully saved.' };
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error saving customers final transaction: ' + error.message);
         }
     }
 };

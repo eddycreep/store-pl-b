@@ -51,6 +51,40 @@ let BasketController = class BasketController {
             throw new common_1.BadRequestException(error.message);
         }
     }
+    async checkProductSpecials(productDescription) {
+        try {
+            const products = productDescription.split(',').map(item => item.trim());
+            return await this.basketService.checkProductSpecials(products);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async checkCombinedSpecials(productDescription) {
+        try {
+            const products = productDescription.split(',').map(item => item.trim());
+            return await this.basketService.checkCombinedSpecials(products);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async updateBasketItemsDisc(basketItemsDiscDtos) {
+        try {
+            return await this.basketService.updateBasketItemsDisc(basketItemsDiscDtos);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async saveFinalTransaction(finalTransactionDto) {
+        try {
+            return await this.basketService.saveFinalTransaction(finalTransactionDto);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
 };
 exports.BasketController = BasketController;
 __decorate([
@@ -131,6 +165,34 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "checkLoyaltyCustomer", null);
+__decorate([
+    (0, common_1.Get)('check-product-specials/:product_description'),
+    __param(0, (0, common_1.Param)('product_description')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "checkProductSpecials", null);
+__decorate([
+    (0, common_1.Get)('check-combined-specials/:product_description'),
+    __param(0, (0, common_1.Param)('product_description')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "checkCombinedSpecials", null);
+__decorate([
+    (0, common_1.Patch)('update-basket-disc-prices'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "updateBasketItemsDisc", null);
+__decorate([
+    (0, common_1.Post)('save-final-transaction'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [basket_dto_1.FinalTransactionDto]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "saveFinalTransaction", null);
 exports.BasketController = BasketController = __decorate([
     (0, swagger_1.ApiTags)('Basket'),
     (0, common_1.Controller)('basket'),

@@ -17,6 +17,7 @@ const date_fns_1 = require("date-fns");
 let clientLy_basket_id = 0;
 let clientLy_customer_id = 0;
 let clientLy_basket_quantity = 0;
+let clientLy_products = [];
 let BasketListener = class BasketListener {
     constructor(basketService, eventEmitter) {
         this.basketService = basketService;
@@ -33,6 +34,7 @@ let BasketListener = class BasketListener {
         clientLy_basket_id = eventData.basket_id;
         clientLy_customer_id = eventData.customer_id;
         clientLy_basket_quantity = eventData.quantity;
+        clientLy_products = eventData.product;
         try {
             const productPrices = await this.basketService.fetchProductPrices(eventData.product);
             const returnedDescriptions = productPrices.map(p => p.description);
@@ -80,6 +82,26 @@ let BasketListener = class BasketListener {
             console.error('EVENT ERROR, Error determining whether customer is on the loyalty program: ', error.message);
         }
     }
+    async handleProductSpecials() {
+        console.log('Checking individual specials for the purchased items: ', clientLy_products);
+        try {
+            const productSpecials = await this.basketService.checkProductSpecials(clientLy_products);
+            console.log('EVENT SUCCESS, INDIVIDUAL PRODUCT SPECIALS: ', productSpecials);
+        }
+        catch (error) {
+            console.error('EVENT ERROR, Error checking the individual specials for the purchased items', error.message);
+        }
+    }
+    async handleCombinedSpecials() {
+        console.log('Checking combined specials for the purchased items: ', clientLy_products);
+        try {
+            const combinedSpecials = await this.basketService.checkCombinedSpecials(clientLy_products);
+            console.log('EVENT SUCCESS, COMBINED PRODUCT SPECIALS: ', combinedSpecials);
+        }
+        catch (error) {
+            console.error('EVENT ERROR, Error checking the combined specials for the purchased items', error.message);
+        }
+    }
 };
 exports.BasketListener = BasketListener;
 __decorate([
@@ -100,6 +122,18 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], BasketListener.prototype, "handleCheckCustomerLoyalty", null);
+__decorate([
+    (0, event_emitter_1.OnEvent)('check.product.specials'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], BasketListener.prototype, "handleProductSpecials", null);
+__decorate([
+    (0, event_emitter_1.OnEvent)('check.combined.specials'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], BasketListener.prototype, "handleCombinedSpecials", null);
 exports.BasketListener = BasketListener = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [basket_service_1.BasketService,

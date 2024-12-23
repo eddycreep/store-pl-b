@@ -1,7 +1,7 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
-import { CustomerBasketDto, SaveBasketItemsDto, UpdateBasketItemPricesDto, FinalTransactionDto, ProductDto, LoyaltyCustomersDto, ProductSpecialsDto, CombinedProductSpecialsDto } from './dto/basket.dto';
+import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, LoyaltyCustomersDto, ProductSpecialsDto, CombinedProductSpecialsDto, FinalTransactionDto, BasketItemsDiscDto } from './dto/basket.dto';
 import { format } from "date-fns";
 
 // global variable for 'saveCustomerBasket' 
@@ -132,7 +132,7 @@ export class BasketService {
         )
       );
 
-      // Emit the 'basket.items.save' event with the necessary data
+      // Emit the 'check.loyalty' event
       this.eventEmitter.emit('check.loyalty');
 
       console.log('[SUCCESS] Basket items successfully saved.');
@@ -153,6 +153,9 @@ export class BasketService {
       if (results.length === 0) {
         throw new NotFoundException('Customer not found on the loyalty program');
       }
+
+      // Emit the 'check.product.specials' event
+      this.eventEmitter.emit('check.product.specials');
   
       // Return the results (guaranteed to be an array of objects)
       return results;
@@ -162,168 +165,127 @@ export class BasketService {
     }
   }
 
-  // async checkProductSpecials(products: string[]): Promise<ProductSpecialsDto[]> {
-  //   const query = `SELECT 
-  //                   sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
-  //                   sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
-  //                   spi.product_description, spi.special_price
-  //                   FROM loyalty_program.tblspecials sp
-  //                   JOIN loyalty_program.tblspecialitems spi
-  //                   ON sp.special_id = spi.special_id
-  //                   WHERE sp.special_type = 'Special' 
-  //                   AND sp.isActive = 1 
-  //                   AND spi.product_description IN (?) 
-  //                   AND sp.start_date <= CURDATE() 
-  //                   AND sp.expiry_date >= CURDATE()`;
+  async checkProductSpecials(products: string[]): Promise<ProductSpecialsDto[]> {
+    const query = `SELECT 
+                    sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
+                    sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
+                    spi.product_description, spi.special_price
+                    FROM loyalty_program.tblspecials sp
+                    JOIN loyalty_program.tblspecialitems spi
+                    ON sp.special_id = spi.special_id
+                    WHERE sp.special_type = 'Special' 
+                    AND sp.isActive = 1 
+                    AND spi.product_description IN (?) 
+                    AND sp.start_date <= CURDATE() 
+                    AND sp.expiry_date >= CURDATE()`;
 
-  //   try {
-  //     const specials = await Promise.all(
-  //       products.map(async (product) => {
-  //         const results = await this.databaseService.query(query, [product]);
-  //         return results as ProductSpecialsDto[]; // Cast the result to ProductSpecialsDto[]
-  //       })
-  //     );
+    try {
+      const specials = await Promise.all(
+        products.map(async (product) => {
+          const results = await this.databaseService.query(query, [product]);
+          return results as ProductSpecialsDto[]; // Cast the result to ProductSpecialsDto[]
+        })
+      );
 
-  //     // Flatten the results array and return the specials
-  //     return specials.flat();
-  //   } catch (error) {
-  //     throw new BadRequestException('Error fetching product specials: ' + error.message);
-  //   }
-  // }
+      // Emit the 'check.combined.specials' event
+      this.eventEmitter.emit('check.combined.specials');
 
-  // async checkCombinedProductSpecials(products: string[]): Promise<CombinedProductSpecialsDto[]> {
-  //   const query = `SELECT 
-  //                     sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
-  //                     sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
-  //                     spcg.special_group_id, spcg.product_description, spcg.special_price
-  //                 FROM 
-  //                     loyalty_program.tblspecials sp
-  //                 JOIN 
-  //                     loyalty_program.tblspecials_combinedgroup spcg 
-  //                 ON 
-  //                     sp.special_id = spcg.special_id
-  //                 WHERE 
-  //                     sp.special_type = 'Combined Special' 
-  //                     AND sp.isActive = 1 
-  //                     AND spcg.product_description IN (?) 
-  //                     AND sp.start_date <= CURDATE() 
-  //                     AND sp.expiry_date >= CURDATE()`;
+      // Flatten the results array and return the specials
+      return specials.flat();
+    } catch (error) {
+      throw new BadRequestException('Error fetching product specials: ' + error.message);
+    }
+  }
 
-  //   try {
-  //     const combinedSpecials = await Promise.all(
-  //       products.map(async (product) => {
-  //         const results = await this.databaseService.query(query, [product]);
-  //         return results as CombinedProductSpecialsDto[]; // Cast the result to CombinedProductSpecialsDto[]
-  //       })
-  //     );
+  async checkCombinedSpecials(products: string[]): Promise<CombinedProductSpecialsDto[]> {
+    const query = `SELECT 
+                      sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id,
+                      sp.start_date, sp.expiry_date, sp.special_value, sp.isActive,
+                      spcg.special_group_id, spcg.product_description, spcg.special_price
+                  FROM 
+                      loyalty_program.tblspecials sp
+                  JOIN 
+                      loyalty_program.tblspecials_combinedgroup spcg 
+                  ON 
+                      sp.special_id = spcg.special_id
+                  WHERE 
+                      sp.special_type = 'Combined Special' 
+                      AND sp.isActive = 1 
+                      AND spcg.product_description IN (?) 
+                      AND sp.start_date <= CURDATE() 
+                      AND sp.expiry_date >= CURDATE()`;
 
-  //     // Flatten the results array and return the combinedSpecials
-  //     return combinedSpecials.flat();
-  //   } catch (error) {
-  //     throw new BadRequestException('Error fetching product specials: ' + error.message);
-  //   }
-  // }
+    try {
+      const combinedSpecials = await Promise.all(
+        products.map(async (product) => {
+          const results = await this.databaseService.query(query, [product]);
+          return results as CombinedProductSpecialsDto[]; // Cast the result to CombinedProductSpecialsDto[]
+        })
+      );
 
-  // async fetchProductPrices(products: string[]): Promise<ProductDto[]> {
-  //   const query = `SELECT mstn.id, mstn.selling_incl_1, mstn.special_price_incl, COALESCE(inv.description_1, inv.description_2) AS description FROM loyalty_program.tblmultistoretrn mstn 
-  //     JOIN loyalty_program.tblinventory inv ON mstn.item_code = inv.item_code WHERE COALESCE(inv.description_1, inv.description_2) IN (?)`;
+      // Flatten the results array and return the combinedSpecials
+      return combinedSpecials.flat();
+    } catch (error) {
+      throw new BadRequestException('Error fetching combined specials: ' + error.message);
+    }
+  }
 
-  //   try {
-  //     const productPrices = await Promise.all(
-  //       products.map(async (product) => {
-  //         const results = await this.databaseService.query(query, [product]);
-  //         return results as ProductDto[]; // Cast the result to ProductDto[]
-  //       })
-  //     );
-
-  //     clients_purchasedItem_prices = productPrices.flat();
-
-  //     // Flatten the results array and return the product prices
-  //     return productPrices.flat();
-  //   } catch (error) {
-  //     throw new BadRequestException('Error fetching product prices: ' + error.message);
-  //   }
-  // }
-
-  // async updateBasketItemPrices(basketId: number, updateBasketItemPricesDto: UpdateBasketItemPricesDto) {
-  //   try {
-  //     //const { customer_id, quantity } = updateBasketItemPricesDto;
+  async updateBasketItemsDisc(basketItemsDiscDtos: BasketItemsDiscDto[]) {
+    // Prepare the SQL query for updating individual items
+    const query = `
+      UPDATE loyalty_program.tblbasketinfo_items
+      SET discount_applied = ?, final_price = ?
+      WHERE product = ? AND basket_id = ?`;
   
-  //     // Example purchased items
-  //     const basket_id = 15
-  //     const purchasedProducts = ["Apple", "Banana", "Orange"];
+    try {
+      // Iterate over each item in the request body
+      for (const item of basketItemsDiscDtos) {
+        const { basket_id, product, discount_applied, final_price } = item;
   
-  //     // Step 1: Fetch product prices
-  //     const productPrices = await this.fetchProductPrices(purchasedProducts);
+        // Update the database for each product
+        await this.databaseService.query(query, [
+          discount_applied,
+          final_price,
+          product,
+          basket_id
+        ]);
+      }
   
-  //     // Step 2: Map the fetched prices to the purchased products
-  //     const updatedBasketItems = purchasedProducts.map((productName) => {
-  //       const productPrice = productPrices.find(
-  //         (product) => product.description === productName
-  //       );
+      return {
+        message: `${basketItemsDiscDtos.length} Basket Items discounted prices updated successfully`,
+      };
+    } catch (error) {
+      throw new BadRequestException(
+        'Error updating the basket items with their discounted prices: ' + error.message
+      );
+    }
+  }
   
-  //       if (!productPrice) {
-  //         throw new NotFoundException(`Price not found for product: ${productName}`);
-  //       }
-  
-  //       return {
-  //         product: productName,
-  //         price: productPrice.selling_incl_1,
-  //       };
-  //     });
-  
-  //     // Step 3: Update the basket items in the database
-  //     for (const item of updatedBasketItems) {
-  //       await this.databaseService.query(
-  //           `UPDATE loyalty_program.tblbasketinfo_items 
-  //           SET product_price = ? 
-  //           WHERE product = ? AND basket_id = ?`
-  //           ,
 
-  //         [item.price, item.product, basket_id]
-  //       );
-  //     }
-  
-  //     return {
-  //       message: 'Basket item prices updated successfully.',
-  //       updatedItems: updatedBasketItems,
-  //     };
-  //   } catch (error) {
-  //     console.error('Error updating basket item prices:', error.message);
-  //     throw new BadRequestException('Error updating basket item prices: ' + error.message);
-  //   }
-  // }
+  async saveFinalTransaction(finalTransactionDto: FinalTransactionDto) {
+    const { basket_id, customer_id, card_number, basket_quantity, total_basket_amount, disc_total_basket_amount, payment_method, purchase_date } = finalTransactionDto;
 
+    // Format purchase_date to the required format
+    const formattedPurchaseDate = format(new Date(purchase_date), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
 
-  // async saveFinalTransaction(finalTransactionDto: FinalTransactionDto) {
-  //   const { basket_id, customer_id, purchased_product, quantity, product_amount, product_discounted_amount, total_basket_amount, total_disc_basket_amount, payment_method, purchase_date } = finalTransactionDto;
+    const query = `INSERT INTO loyalty_program.tblfinaltransaction(basket_id, customer_id, card_number, basket_quantity, total_basket_amount, disc_total_basket_amount, payment_method, purchase_date)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
 
-  //   // Format purchase_date to the required format
-  //   const formattedPurchaseDate = format(new Date(purchase_date), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
+    try {
+      // Save basket data to the database
+      await this.databaseService.query(query, [
+        basket_id,
+        customer_id,
+        card_number,
+        basket_quantity,
+        total_basket_amount,
+        disc_total_basket_amount,
+        payment_method,
+        formattedPurchaseDate,
+      ]);
 
-  //   const query = `INSERT INTO loyalty_program.tblcompletetransaction (basket_id, customer_id, purchased_product, quantity, product_amount, product_discounted_amount, total_basket_amount, total_disc_basket_amount, payment_method, purchase_date)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-
-  //   try {
-  //     // Map through the 'product' array and insert each product individually
-  //     return Promise.all(
-  //       purchased_product.map((productName) => {
-  //         // Directly use the product name as a string instead of an array
-  //         return this.databaseService.query(query, [
-  //           basket_id,
-  //           customer_id,
-  //           productName, // Use the product name as a string
-  //           quantity,
-  //           product_amount,
-  //           product_discounted_amount,
-  //           total_basket_amount,
-  //           total_disc_basket_amount,
-  //           payment_method,
-  //           formattedPurchaseDate,
-  //         ]);
-  //       })
-  //     );
-  //   } catch (error) {
-  //     throw new BadRequestException('Error saving customers final transaction: ' + error.message);
-  //   }
-  // }
+      return { message: 'Customers Final Transaction was successfully saved.' };
+    } catch (error) {
+      throw new BadRequestException('Error saving customers final transaction: ' + error.message);
+    }
+  }
 }

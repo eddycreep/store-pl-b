@@ -15,5 +15,7 @@ export declare class BasketListener {
         productPrices: ProductDto[];
     }): Promise<void>;
     handleCheckCustomerLoyalty(): Promise<void>;
+    handleProductSpecials(): Promise<void>;
+    handleCombinedSpecials(): Promise<void>;
 }
 //# sourceMappingURL=basket.listener.d.ts.map

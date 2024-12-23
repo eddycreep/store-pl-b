@@ -7,6 +7,7 @@ import { format } from "date-fns";
 let clientLy_basket_id = 0;
 let clientLy_customer_id = 0;
 let clientLy_basket_quantity = 0;
+let clientLy_products: string[] = []; // Global variable to store the product
 
 @Injectable()
 export class BasketListener {
@@ -34,6 +35,7 @@ export class BasketListener {
     clientLy_basket_id = eventData.basket_id
     clientLy_customer_id = eventData.customer_id
     clientLy_basket_quantity = eventData.quantity
+    clientLy_products = eventData.product; // Save the product data globally
   
     try {
       const productPrices = await this.basketService.fetchProductPrices(eventData.product);
@@ -113,6 +115,32 @@ export class BasketListener {
       console.log('Loyalty status:', loyaltyStatus);
     } catch (error) {
       console.error('EVENT ERROR, Error determining whether customer is on the loyalty program: ', error.message);
+    }
+  }
+
+  @OnEvent('check.product.specials')
+  async handleProductSpecials() {
+    console.log('Checking individual specials for the purchased items: ', clientLy_products);
+  
+    try {
+      // execute the 'checkProductSpecials' method with products array
+      const productSpecials = await this.basketService.checkProductSpecials(clientLy_products);
+      console.log('EVENT SUCCESS, INDIVIDUAL PRODUCT SPECIALS: ', productSpecials);
+    } catch (error) {
+      console.error('EVENT ERROR, Error checking the individual specials for the purchased items', error.message);
+    }
+  }
+
+  @OnEvent('check.combined.specials')
+  async handleCombinedSpecials() {
+    console.log('Checking combined specials for the purchased items: ', clientLy_products);
+  
+    try {
+      // execute the 'checkProductSpecials' method with products array
+      const combinedSpecials = await this.basketService.checkCombinedSpecials(clientLy_products);
+      console.log('EVENT SUCCESS, COMBINED PRODUCT SPECIALS: ', combinedSpecials);
+    } catch (error) {
+      console.error('EVENT ERROR, Error checking the combined specials for the purchased items', error.message);
     }
   }
 }

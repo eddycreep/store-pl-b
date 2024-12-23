@@ -76,13 +76,26 @@ export class CombinedProductSpecialsDto {
 export class FinalTransactionDto {
   @IsNumber() basket_id: number;  
   @IsNumber() customer_id: number;
-  @IsArray() // Changed to reflect an array of strings
-  @IsString({ each: true }) purchased_product: string[];
-  @IsNumber() quantity: number;
-  @IsNumber() product_amount: number; 
-  @IsNumber() product_discounted_amount: number; 
+  @IsString() card_number: string;
+  @IsNumber() basket_quantity: number;
   @IsNumber() total_basket_amount: number; 
-  @IsNumber() total_disc_basket_amount: number;  
+  @IsNumber() disc_total_basket_amount: number;  
   @IsString() payment_method: string;   
   @IsString() purchase_date: string
+}
+
+// export class BasketItemsDiscDto {
+//   @IsNumber() basket_id: number;
+//   @IsArray() // Changed to reflect an array of strings
+//   @IsString({ each: true }) products: string[];
+//   @IsNumber() discount_applied: number;  
+//   @IsNumber() final_price: number;
+// }
+
+// not sure
+export class BasketItemsDiscDto {
+  @IsNumber() basket_id: number;
+  @IsString() product: string;
+  @IsNumber() discount_applied: number;  
+  @IsNumber() final_price: number;
 }
