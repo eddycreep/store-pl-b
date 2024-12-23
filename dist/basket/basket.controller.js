@@ -43,6 +43,14 @@ let BasketController = class BasketController {
             throw new common_1.BadRequestException(error.message);
         }
     }
+    async checkLoyaltyCustomer(customerId) {
+        try {
+            return await this.basketService.checkLoyaltyCustomer(customerId);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
 };
 exports.BasketController = BasketController;
 __decorate([
@@ -116,6 +124,13 @@ __decorate([
     __metadata("design:paramtypes", [basket_dto_1.SaveBasketItemsDto]),
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "saveCustomerBasketItems", null);
+__decorate([
+    (0, common_1.Get)('checkloyalty/:CustomerID'),
+    __param(0, (0, common_1.Param)('CustomerID')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "checkLoyaltyCustomer", null);
 exports.BasketController = BasketController = __decorate([
     (0, swagger_1.ApiTags)('Basket'),
     (0, common_1.Controller)('basket'),

@@ -14,5 +14,6 @@ export declare class BasketListener {
     handleBasketItemsSave(eventData: {
         productPrices: ProductDto[];
     }): Promise<void>;
+    handleCheckCustomerLoyalty(): Promise<void>;
 }
 //# sourceMappingURL=basket.listener.d.ts.map

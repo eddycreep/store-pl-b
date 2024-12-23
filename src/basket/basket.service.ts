@@ -132,32 +132,35 @@ export class BasketService {
         )
       );
 
+      // Emit the 'basket.items.save' event with the necessary data
+      this.eventEmitter.emit('check.loyalty');
+
       console.log('[SUCCESS] Basket items successfully saved.');
     } catch (error) {
       throw new BadRequestException('Error saving basket items: ' + error.message);
     }
   }
 
-  // async checkLoyaltyCustomer(customerId: string): Promise<LoyaltyCustomersDto[]> {
-  //   // SQL query to check the loyalty tier for a specific customer
-  //   const query = `SELECT CustomerID, LoyaltyTier FROM loyalty_program.tblloyaltycustomers WHERE CustomerID = ?`;
+  async checkLoyaltyCustomer(customerId: string): Promise<LoyaltyCustomersDto[]> {
+    // SQL query to check the loyalty tier for a specific customer
+    const query = `SELECT CustomerID, LoyaltyTier FROM loyalty_program.tblloyaltycustomers WHERE CustomerID = ?`;
   
-  //   try {
-  //     // Query the database and explicitly type the result
-  //     const results = await this.databaseService.query(query, [customerId]) as LoyaltyCustomersDto[];
+    try {
+      // Query the database and explicitly type the result
+      const results = await this.databaseService.query(query, [customerId]) as LoyaltyCustomersDto[];
   
-  //     // If no results are returned, throw a NotFoundException
-  //     if (results.length === 0) {
-  //       throw new NotFoundException('Customer not found on the loyalty program');
-  //     }
+      // If no results are returned, throw a NotFoundException
+      if (results.length === 0) {
+        throw new NotFoundException('Customer not found on the loyalty program');
+      }
   
-  //     // Return the results (guaranteed to be an array of objects)
-  //     return results;
-  //   } catch (error) {
-  //     // Catch and throw any errors with a detailed message
-  //     throw new BadRequestException('Error checking loyalty customer: ' + error.message);
-  //   }
-  // }
+      // Return the results (guaranteed to be an array of objects)
+      return results;
+    } catch (error) {
+      // Catch and throw any errors with a detailed message
+      throw new BadRequestException('Error checking loyalty customer: ' + error.message);
+    }
+  }
 
   // async checkProductSpecials(products: string[]): Promise<ProductSpecialsDto[]> {
   //   const query = `SELECT 

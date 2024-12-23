@@ -70,6 +70,16 @@ let BasketListener = class BasketListener {
             console.error('EVENT ERROR, Error saving basket items:', error.message);
         }
     }
+    async handleCheckCustomerLoyalty() {
+        console.log('Checking loyalty for customer with ID: ', clientLy_customer_id);
+        try {
+            const loyaltyStatus = await this.basketService.checkLoyaltyCustomer(clientLy_customer_id.toString());
+            console.log('Loyalty status:', loyaltyStatus);
+        }
+        catch (error) {
+            console.error('EVENT ERROR, Error determining whether customer is on the loyalty program: ', error.message);
+        }
+    }
 };
 exports.BasketListener = BasketListener;
 __decorate([
@@ -84,6 +94,12 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], BasketListener.prototype, "handleBasketItemsSave", null);
+__decorate([
+    (0, event_emitter_1.OnEvent)('check.loyalty'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], BasketListener.prototype, "handleCheckCustomerLoyalty", null);
 exports.BasketListener = BasketListener = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [basket_service_1.BasketService,

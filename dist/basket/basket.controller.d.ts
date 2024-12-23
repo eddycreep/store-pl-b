@@ -8,5 +8,6 @@ export declare class BasketController {
     }>;
     fetchProductPrices(productDescription: string): Promise<ProductDto[]>;
     saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto): Promise<void>;
+    checkLoyaltyCustomer(customerId: string): Promise<import("./dto/basket.dto").LoyaltyCustomersDto[]>;
 }
 //# sourceMappingURL=basket.controller.d.ts.map

@@ -99,4 +99,20 @@ export class BasketListener {
         console.error('EVENT ERROR, Error saving basket items:', error.message);
       }
   }
+
+  /**
+   * Handles the 'check.loyalty' event and checks if the customer is in the loyalty program.
+   */
+  @OnEvent('check.loyalty')
+  async handleCheckCustomerLoyalty() {
+    console.log('Checking loyalty for customer with ID: ', clientLy_customer_id);
+  
+    try {
+      // Ensure clientLy_customer_id is passed as a string
+      const loyaltyStatus = await this.basketService.checkLoyaltyCustomer(clientLy_customer_id.toString());
+      console.log('Loyalty status:', loyaltyStatus);
+    } catch (error) {
+      console.error('EVENT ERROR, Error determining whether customer is on the loyalty program: ', error.message);
+    }
+  }
 }

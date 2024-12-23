@@ -91,10 +91,24 @@ let BasketService = class BasketService {
                 product_price,
                 insertionTime,
             ])));
+            this.eventEmitter.emit('check.loyalty');
             console.log('[SUCCESS] Basket items successfully saved.');
         }
         catch (error) {
             throw new common_1.BadRequestException('Error saving basket items: ' + error.message);
+        }
+    }
+    async checkLoyaltyCustomer(customerId) {
+        const query = `SELECT CustomerID, LoyaltyTier FROM loyalty_program.tblloyaltycustomers WHERE CustomerID = ?`;
+        try {
+            const results = await this.databaseService.query(query, [customerId]);
+            if (results.length === 0) {
+                throw new common_1.NotFoundException('Customer not found on the loyalty program');
+            }
+            return results;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error checking loyalty customer: ' + error.message);
         }
     }
 };
