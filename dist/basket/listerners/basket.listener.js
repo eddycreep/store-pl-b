@@ -13,41 +13,37 @@ exports.BasketListener = void 0;
 const common_1 = require("@nestjs/common");
 const event_emitter_1 = require("@nestjs/event-emitter");
 const basket_service_1 = require("../basket.service");
-const basket_dto_1 = require("../dto/basket.dto");
-const date_fns_1 = require("date-fns");
 let BasketListener = class BasketListener {
     constructor(basketService, eventEmitter) {
         this.basketService = basketService;
         this.eventEmitter = eventEmitter;
     }
-    onModuleInit() {
-        this.eventEmitter.on('save-basket-items', (data) => {
-            this.handleBasketSaved(data);
-        });
-    }
-    async handleBasketSaved(CustomerBasketDto) {
-        console.log('Executing save-basket-items method...');
-        const { basket_id, customer_id, product, quantity } = CustomerBasketDto;
-        const insertionTime = (0, date_fns_1.format)(new Date(), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
-        const SaveBasketItemsDto = {
-            basket_id: basket_id,
-            customer_id: customer_id,
-            product: product.map((item) => item),
-            quantity: quantity,
-            insertion_time: insertionTime,
-        };
-        await this.basketService.saveCustomerBasketItems(SaveBasketItemsDto);
+    async handleBasketSaved(eventData) {
+        console.log('[EVENT TRIGGERED] Fetching product prices for:', eventData.product);
+        try {
+            const productPrices = await this.basketService.fetchProductPrices(eventData.product);
+            const returnedDescriptions = productPrices.map(p => p.description);
+            const notFoundItems = eventData.product.filter(product => !returnedDescriptions.includes(product));
+            if (notFoundItems.length > 0) {
+                console.warn('[WARNING] The price for the following items was not found:', notFoundItems.join(', '));
+            }
+            console.log('[SUCCESS] Fetched product prices:', productPrices);
+        }
+        catch (error) {
+            console.error('[ERROR] Failed to fetch product prices:', error.message);
+        }
     }
 };
 exports.BasketListener = BasketListener;
 __decorate([
-    (0, event_emitter_1.OnEvent)('save-basket-items'),
+    (0, event_emitter_1.OnEvent)('basket.saved'),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [basket_dto_1.CustomerBasketDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], BasketListener.prototype, "handleBasketSaved", null);
 exports.BasketListener = BasketListener = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [basket_service_1.BasketService, event_emitter_1.EventEmitter2])
+    __metadata("design:paramtypes", [basket_service_1.BasketService,
+        event_emitter_1.EventEmitter2])
 ], BasketListener);
 //# sourceMappingURL=basket.listener.js.map

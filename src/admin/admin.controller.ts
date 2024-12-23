@@ -83,38 +83,32 @@ export class AdminController {
         }
     }
     
-        /**
-         * Saves survey questions linked to a specific survey.
-         * @param surveyQuestions Data containing survey ID, question text, and type.
-         */
-        @Post('savesurveyquestions')
-        async saveSurveyQuestions(@Body() surveyQuestionsDto: SaveSurveyQuestionsDto) {
-            return this.adminService.saveSurveyQuestions(surveyQuestionsDto);
-        }
+    /**
+    * Saves survey questions linked to a specific survey.
+    * @param surveyQuestions Data containing survey ID, question text, and type.
+    */
+    @Post('savesurveyquestions')
+    async saveSurveyQuestions(@Body() surveyQuestionsDto: SaveSurveyQuestionsDto) {
+        return this.adminService.saveSurveyQuestions(surveyQuestionsDto);
+    }
     
-        /**
-         * Updates a survey's details.
-         * @param surveyId The ID of the survey to update.
-         * @param surveyData The updated survey data.
-         */
-        @Patch('updatesurvey/:survey_id')
-        async updateSurvey(
-            @Param('survey_id') surveyId: number,
-            @Body() surveyData: UpdateSurveyDto,
-        ) {
-            return this.adminService.updateSurvey(surveyId, surveyData);
-        }
+    /**
+    * Updates a survey's details.
+    * @param surveyId The ID of the survey to update.
+    * @param surveyData The updated survey data.
+    */
+    @Patch('updatesurvey/:survey_id')
+    async updateSurvey(@Param('survey_id') surveyId: number, @Body() surveyData: UpdateSurveyDto) {
+        return this.adminService.updateSurvey(surveyId, surveyData);
+    }
     
-        /**
-         * Updates the questions linked to a survey.
-         * @param surveyId The ID of the survey whose questions are being updated.
-         * @param questionData The updated question data.
-         */
-        @Patch('updatesurveyquestions/:survey_id')
-        async updateSurveyQuestions(
-            @Param('survey_id') surveyId: number,
-            @Body() questionData: UpdateSurveyQuestionsDto,
-        ) {
-            return this.adminService.updateSurveyQuestions(surveyId, questionData);
-        }
+    /**
+    * Updates the questions linked to a survey.
+    * @param surveyId The ID of the survey whose questions are being updated.
+    * @param questionData The updated question data.
+    */
+    @Patch('updatesurveyquestions/:survey_id')
+    async updateSurveyQuestions(@Param('survey_id') surveyId: number, @Body() questionData: UpdateSurveyQuestionsDto,) {
+        return this.adminService.updateSurveyQuestions(surveyId, questionData);
+    }
 }

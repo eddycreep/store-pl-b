@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FinalTransactionDto = exports.CombinedProductSpecialsDto = exports.ProductSpecialsDto = exports.LoyaltyCustomersDto = exports.UpdateBasketItemsDto = exports.SaveBasketItemsDto = exports.ProductDto = exports.CustomerBasketDto = void 0;
+exports.FinalTransactionDto = exports.CombinedProductSpecialsDto = exports.ProductSpecialsDto = exports.LoyaltyCustomersDto = exports.UpdateBasketItemPricesDto = exports.SaveBasketItemsDto = exports.ProductDto = exports.CustomerBasketDto = void 0;
 const class_validator_1 = require("class-validator");
 class CustomerBasketDto {
 }
@@ -86,28 +86,20 @@ __decorate([
     __metadata("design:type", Number)
 ], SaveBasketItemsDto.prototype, "quantity", void 0);
 __decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], SaveBasketItemsDto.prototype, "product_price", void 0);
+__decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], SaveBasketItemsDto.prototype, "insertion_time", void 0);
-class UpdateBasketItemsDto {
+class UpdateBasketItemPricesDto {
 }
-exports.UpdateBasketItemsDto = UpdateBasketItemsDto;
+exports.UpdateBasketItemPricesDto = UpdateBasketItemPricesDto;
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], UpdateBasketItemsDto.prototype, "basket_id", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], UpdateBasketItemsDto.prototype, "product_price", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], UpdateBasketItemsDto.prototype, "discount_applied", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], UpdateBasketItemsDto.prototype, "final_price", void 0);
+], UpdateBasketItemPricesDto.prototype, "product_price", void 0);
 class LoyaltyCustomersDto {
 }
 exports.LoyaltyCustomersDto = LoyaltyCustomersDto;

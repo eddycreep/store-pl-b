@@ -24,54 +24,10 @@ let BasketController = class BasketController {
     async saveCustomerBasket(customerBasketDto) {
         return this.basketService.saveCustomerBasket(customerBasketDto);
     }
-    async saveCustomerBasketItems(saveBasketItemsDto) {
-        console.log('Received SaveBasketItemsDto:', saveBasketItemsDto);
-        try {
-            return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
-        }
-        catch (error) {
-            console.error('Error in controller:', error.message);
-            throw new common_1.BadRequestException(error.message);
-        }
-    }
-    async checkLoyaltyCustomer(customerId) {
-        try {
-            return await this.basketService.checkLoyaltyCustomer(customerId);
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(error.message);
-        }
-    }
-    async checkProductSpecials(productDescription) {
-        try {
-            const products = productDescription.split(',').map(item => item.trim());
-            return await this.basketService.checkProductSpecials(products);
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(error.message);
-        }
-    }
-    async checkCombinedProductSpecials(productDescription) {
-        try {
-            const products = productDescription.split(',').map(item => item.trim());
-            return await this.basketService.checkCombinedProductSpecials(products);
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(error.message);
-        }
-    }
     async fetchProductPrices(productDescription) {
         try {
             const products = productDescription.split(',').map(item => item.trim());
             return await this.basketService.fetchProductPrices(products);
-        }
-        catch (error) {
-            throw new common_1.BadRequestException(error.message);
-        }
-    }
-    async saveFinalTransaction(finalTransactionDto) {
-        try {
-            return await this.basketService.saveFinalTransaction(finalTransactionDto);
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -137,47 +93,12 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "saveCustomerBasket", null);
 __decorate([
-    (0, common_1.Post)('savecustomerbasketitems'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [basket_dto_1.SaveBasketItemsDto]),
-    __metadata("design:returntype", Promise)
-], BasketController.prototype, "saveCustomerBasketItems", null);
-__decorate([
-    (0, common_1.Get)('checkloyalty/:CustomerID'),
-    __param(0, (0, common_1.Param)('CustomerID')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], BasketController.prototype, "checkLoyaltyCustomer", null);
-__decorate([
-    (0, common_1.Get)('check-product-specials/:product_description'),
-    __param(0, (0, common_1.Param)('product_description')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], BasketController.prototype, "checkProductSpecials", null);
-__decorate([
-    (0, common_1.Get)('check-combined-specials/:product_description'),
-    __param(0, (0, common_1.Param)('product_description')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], BasketController.prototype, "checkCombinedProductSpecials", null);
-__decorate([
     (0, common_1.Get)('fetch-product-prices/:product_description'),
     __param(0, (0, common_1.Param)('product_description')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "fetchProductPrices", null);
-__decorate([
-    (0, common_1.Post)('save-final-transaction'),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [basket_dto_1.FinalTransactionDto]),
-    __metadata("design:returntype", Promise)
-], BasketController.prototype, "saveFinalTransaction", null);
 exports.BasketController = BasketController = __decorate([
     (0, swagger_1.ApiTags)('Basket'),
     (0, common_1.Controller)('basket'),

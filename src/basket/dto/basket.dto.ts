@@ -1,5 +1,4 @@
-import { IsString, IsNumber, IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNumber, IsArray } from 'class-validator';
 
 export class CustomerBasketDto {
   @IsNumber() basket_id: number;
@@ -15,7 +14,7 @@ export class CustomerBasketDto {
 
 export class ProductDto {
   @IsNumber() id: number;
-  @IsNumber() selling_incl_1: Number;
+  @IsNumber() selling_incl_1: number;
   @IsNumber() special_price_incl: number;
   @IsString() description: string
 }
@@ -27,15 +26,13 @@ export class SaveBasketItemsDto {
   @IsArray() // Changed to reflect an array of strings
   @IsString({ each: true }) product: string[];
   @IsNumber() quantity: number; 
+  @IsNumber() product_price: number; 
   @IsString() insertion_time: string;
 }
 
 
-export class UpdateBasketItemsDto {
-  @IsNumber() basket_id: number; 
+export class UpdateBasketItemPricesDto {
   @IsNumber() product_price?: number; 
-  @IsNumber() discount_applied?: number; 
-  @IsNumber() final_price?: number; 
 }
 
 

@@ -12,6 +12,7 @@ const basket_service_1 = require("./basket.service");
 const basket_controller_1 = require("./basket.controller");
 const database_service_1 = require("../database/database.service");
 const event_emitter_1 = require("@nestjs/event-emitter");
+const basket_listener_1 = require("./listerners/basket.listener");
 let BasketModule = class BasketModule {
 };
 exports.BasketModule = BasketModule;
@@ -19,7 +20,7 @@ exports.BasketModule = BasketModule = __decorate([
     (0, common_1.Module)({
         imports: [event_emitter_1.EventEmitterModule.forRoot()],
         controllers: [basket_controller_1.BasketController],
-        providers: [basket_service_1.BasketService, database_service_1.DatabaseService],
+        providers: [basket_service_1.BasketService, database_service_1.DatabaseService, basket_listener_1.BasketListener],
     })
 ], BasketModule);
 //# sourceMappingURL=basket.module.js.map
