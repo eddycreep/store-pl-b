@@ -198,10 +198,10 @@ let AdminService = class AdminService {
     }
     async updateSurvey(surveyId, surveyData) {
         const query = `
-                UPDATE loyalty_program.tblsurvey 
-                SET survey_title = ?, survey_category = ?, store_id = ?, region = ?, loyalty_tier = ?, start_date = ?, expiry_date = ?, isActive = ?
-                WHERE survey_id = ?
-            `;
+            UPDATE loyalty_program.tblsurvey 
+            SET survey_title = ?, survey_category = ?, store_id = ?, region = ?, loyalty_tier = ?, start_date = ?, expiry_date = ?, isActive = ?
+            WHERE survey_id = ?
+        `;
         try {
             await this.databaseService.query(query, [
                 surveyData.survey_title,
@@ -226,7 +226,7 @@ let AdminService = class AdminService {
                 UPDATE loyalty_program.tblsurvey_questions 
                 SET question_text = ?, question_type = ? 
                 WHERE survey_id = ?
-            `;
+        `;
         try {
             await this.databaseService.query(query, [
                 updateSurveyQuestionsDto.question_text,

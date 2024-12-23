@@ -10,7 +10,7 @@ export declare class CustomerBasketDto {
 }
 export declare class ProductDto {
     id: number;
-    selling_incl_1: Number;
+    selling_incl_1: number;
     special_price_incl: number;
     description: string;
 }
@@ -19,13 +19,11 @@ export declare class SaveBasketItemsDto {
     customer_id: number;
     product: string[];
     quantity: number;
+    product_price: number;
     insertion_time: string;
 }
-export declare class UpdateBasketItemsDto {
-    basket_id: number;
+export declare class UpdateBasketItemPricesDto {
     product_price?: number;
-    discount_applied?: number;
-    final_price?: number;
 }
 export declare class LoyaltyCustomersDto {
     CustomerID: number;
