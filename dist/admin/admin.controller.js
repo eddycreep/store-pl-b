@@ -32,6 +32,43 @@ let AdminController = class AdminController {
     async saveCombinedSpecialItems(saveCombinedSpecialItemsDto) {
         return this.adminService.saveCombinedSpecialItems(saveCombinedSpecialItemsDto);
     }
+    async getAllRewards() {
+        return this.adminService.getAllRewards();
+    }
+    async saveReward(saveRewardsDto) {
+        return this.adminService.saveReward(saveRewardsDto);
+    }
+    async updateReward(rewardId, updateRewardsDto) {
+        return this.adminService.updateReward(rewardId, updateRewardsDto);
+    }
+    async getAllSurveys() {
+        return this.adminService.getAllSurveys();
+    }
+    async saveSurvey(saveSurveyDto) {
+        try {
+            return this.adminService.saveSurvey(saveSurveyDto);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async getSurveyID(surveyTitle) {
+        try {
+            return await this.adminService.getSurveyID(surveyTitle);
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
+    async saveSurveyQuestions(surveyQuestionsDto) {
+        return this.adminService.saveSurveyQuestions(surveyQuestionsDto);
+    }
+    async updateSurvey(surveyId, surveyData) {
+        return this.adminService.updateSurvey(surveyId, surveyData);
+    }
+    async updateSurveyQuestions(surveyId, questionData) {
+        return this.adminService.updateSurveyQuestions(surveyId, questionData);
+    }
 };
 exports.AdminController = AdminController;
 __decorate([
@@ -62,6 +99,70 @@ __decorate([
     __metadata("design:paramtypes", [admin_dto_1.SaveCombinedSpecialItemsDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "saveCombinedSpecialItems", null);
+__decorate([
+    (0, common_1.Get)('getallrewards'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAllRewards", null);
+__decorate([
+    (0, common_1.Post)('savereward'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_dto_1.SaveRewardsDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "saveReward", null);
+__decorate([
+    (0, common_1.Patch)('updatereward/:reward_id'),
+    __param(0, (0, common_1.Param)('reward_id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, admin_dto_1.UpdateRewardsDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateReward", null);
+__decorate([
+    (0, common_1.Get)('getallsurveys'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getAllSurveys", null);
+__decorate([
+    (0, common_1.Post)('savesurvey'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_dto_1.SaveSurveyDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "saveSurvey", null);
+__decorate([
+    (0, common_1.Get)('getsurveyid/:survey_title'),
+    __param(0, (0, common_1.Param)('survey_title')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getSurveyID", null);
+__decorate([
+    (0, common_1.Post)('savesurveyquestions'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [admin_dto_1.SaveSurveyQuestionsDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "saveSurveyQuestions", null);
+__decorate([
+    (0, common_1.Patch)('updatesurvey/:survey_id'),
+    __param(0, (0, common_1.Param)('survey_id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, admin_dto_1.UpdateSurveyDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateSurvey", null);
+__decorate([
+    (0, common_1.Patch)('updatesurveyquestions/:survey_id'),
+    __param(0, (0, common_1.Param)('survey_id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, admin_dto_1.UpdateSurveyQuestionsDto]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "updateSurveyQuestions", null);
 exports.AdminController = AdminController = __decorate([
     (0, common_1.Controller)('admin'),
     __metadata("design:paramtypes", [admin_service_1.AdminService])

@@ -1,7 +1,6 @@
-import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, HttpCode, HttpStatus, BadRequestException } from '@nestjs/common';
 import { BasketService } from './basket.service';
 import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, FinalTransactionDto } from './dto/basket.dto';
-import { BadRequestException } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Basket') // Swagger tag

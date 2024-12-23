@@ -1,6 +1,7 @@
 export declare class CustomerBasketDto {
     basket_id: number;
     customer_id: number;
+    card_number: string;
     product: [];
     quantity: number;
     purchase_date: string;

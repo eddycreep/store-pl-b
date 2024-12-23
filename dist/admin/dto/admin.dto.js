@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateSurveyQuestionsDto = exports.SaveSurveyQuestions = exports.GetSurveyIdDto = exports.UpdateSurveyDto = exports.SaveSurveyDto = exports.GetSurveysDto = exports.SaveRewardsDto = exports.GetAllRewardsDto = exports.UpdateCombinedSpecialItemsDto = exports.UpdateSpecialItemsDto = exports.UpdateSpecialDto = exports.SaveCombinedSpecialItemsDto = exports.SaveSpecialItemsDto = exports.SaveSpecialDto = void 0;
+exports.UpdateSurveyQuestionsDto = exports.SaveSurveyQuestionsDto = exports.GetSurveyIdDto = exports.UpdateSurveyDto = exports.SaveSurveyDto = exports.GetSurveysDto = exports.UpdateRewardsDto = exports.SaveRewardsDto = exports.GetAllRewardsDto = exports.UpdateCombinedSpecialItemsDto = exports.UpdateSpecialItemsDto = exports.UpdateSpecialDto = exports.SaveCombinedSpecialItemsDto = exports.SaveSpecialItemsDto = exports.SaveSpecialDto = void 0;
 const class_validator_1 = require("class-validator");
 const mapped_types_1 = require("@nestjs/mapped-types");
 class SaveSpecialDto {
@@ -196,6 +196,9 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], SaveRewardsDto.prototype, "isActive", void 0);
+class UpdateRewardsDto extends (0, mapped_types_1.PartialType)(SaveRewardsDto) {
+}
+exports.UpdateRewardsDto = UpdateRewardsDto;
 class GetSurveysDto {
 }
 exports.GetSurveysDto = GetSurveysDto;
@@ -280,10 +283,10 @@ __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], GetSurveyIdDto.prototype, "survey_id", void 0);
-class SaveSurveyQuestions {
+class SaveSurveyQuestionsDto {
 }
-exports.SaveSurveyQuestions = SaveSurveyQuestions;
-class UpdateSurveyQuestionsDto extends (0, mapped_types_1.PartialType)(SaveSurveyQuestions) {
+exports.SaveSurveyQuestionsDto = SaveSurveyQuestionsDto;
+class UpdateSurveyQuestionsDto extends (0, mapped_types_1.PartialType)(SaveSurveyQuestionsDto) {
 }
 exports.UpdateSurveyQuestionsDto = UpdateSurveyQuestionsDto;
 //# sourceMappingURL=admin.dto.js.map

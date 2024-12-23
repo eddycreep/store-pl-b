@@ -66,6 +66,8 @@ export class SaveRewardsDto {
     @IsNumber() isActive: number;
 }
 
+export class UpdateRewardsDto extends PartialType(SaveRewardsDto) {}
+
 
 export class GetSurveysDto {
     @IsNumber() survey_id: number;
@@ -98,10 +100,10 @@ export class GetSurveyIdDto {
     @IsNumber() survey_id: number;
 }
 
-export class SaveSurveyQuestions {
+export class SaveSurveyQuestionsDto {
     survey_id: number;
     question_text: string;
     question_type: string;
 }
 
-export class UpdateSurveyQuestionsDto extends PartialType(SaveSurveyQuestions) {} //update survey questions
+export class UpdateSurveyQuestionsDto extends PartialType(SaveSurveyQuestionsDto) {} //update survey questions 
