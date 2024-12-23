@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FinalTransactionDto = exports.CombinedProductSpecialsDto = exports.ProductSpecialsDto = exports.LoyaltyCustomersDto = exports.UpdateBasketItemPricesDto = exports.SaveBasketItemsDto = exports.ProductDto = exports.CustomerBasketDto = void 0;
+exports.BasketItemsDiscDto = exports.FinalTransactionDto = exports.CombinedProductSpecialsDto = exports.ProductSpecialsDto = exports.LoyaltyCustomersDto = exports.UpdateBasketItemPricesDto = exports.SaveBasketItemsDto = exports.ProductDto = exports.CustomerBasketDto = void 0;
 const class_validator_1 = require("class-validator");
 class CustomerBasketDto {
 }
@@ -221,22 +221,13 @@ __decorate([
     __metadata("design:type", Number)
 ], FinalTransactionDto.prototype, "customer_id", void 0);
 __decorate([
-    (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.IsString)({ each: true }),
-    __metadata("design:type", Array)
-], FinalTransactionDto.prototype, "purchased_product", void 0);
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], FinalTransactionDto.prototype, "card_number", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], FinalTransactionDto.prototype, "quantity", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], FinalTransactionDto.prototype, "product_amount", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], FinalTransactionDto.prototype, "product_discounted_amount", void 0);
+], FinalTransactionDto.prototype, "basket_quantity", void 0);
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
@@ -244,7 +235,7 @@ __decorate([
 __decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], FinalTransactionDto.prototype, "total_disc_basket_amount", void 0);
+], FinalTransactionDto.prototype, "disc_total_basket_amount", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
@@ -253,4 +244,23 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], FinalTransactionDto.prototype, "purchase_date", void 0);
+class BasketItemsDiscDto {
+}
+exports.BasketItemsDiscDto = BasketItemsDiscDto;
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], BasketItemsDiscDto.prototype, "basket_id", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], BasketItemsDiscDto.prototype, "product", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], BasketItemsDiscDto.prototype, "discount_applied", void 0);
+__decorate([
+    (0, class_validator_1.IsNumber)(),
+    __metadata("design:type", Number)
+], BasketItemsDiscDto.prototype, "final_price", void 0);
 //# sourceMappingURL=basket.dto.js.map

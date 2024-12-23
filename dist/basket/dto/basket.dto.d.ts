@@ -59,13 +59,17 @@ export declare class CombinedProductSpecialsDto {
 export declare class FinalTransactionDto {
     basket_id: number;
     customer_id: number;
-    purchased_product: string[];
-    quantity: number;
-    product_amount: number;
-    product_discounted_amount: number;
+    card_number: string;
+    basket_quantity: number;
     total_basket_amount: number;
-    total_disc_basket_amount: number;
+    disc_total_basket_amount: number;
     payment_method: string;
     purchase_date: string;
+}
+export declare class BasketItemsDiscDto {
+    basket_id: number;
+    product: string;
+    discount_applied: number;
+    final_price: number;
 }
 //# sourceMappingURL=basket.dto.d.ts.map
