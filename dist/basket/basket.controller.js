@@ -33,6 +33,16 @@ let BasketController = class BasketController {
             throw new common_1.BadRequestException(error.message);
         }
     }
+    async saveCustomerBasketItems(saveBasketItemsDto) {
+        console.log('Received SaveBasketItemsDto:', saveBasketItemsDto);
+        try {
+            return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
+        }
+        catch (error) {
+            console.error('Error in controller:', error.message);
+            throw new common_1.BadRequestException(error.message);
+        }
+    }
 };
 exports.BasketController = BasketController;
 __decorate([
@@ -99,6 +109,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "fetchProductPrices", null);
+__decorate([
+    (0, common_1.Post)('savecustomerbasketitems'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [basket_dto_1.SaveBasketItemsDto]),
+    __metadata("design:returntype", Promise)
+], BasketController.prototype, "saveCustomerBasketItems", null);
 exports.BasketController = BasketController = __decorate([
     (0, swagger_1.ApiTags)('Basket'),
     (0, common_1.Controller)('basket'),

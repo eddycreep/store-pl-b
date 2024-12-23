@@ -1,6 +1,6 @@
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
-import { CustomerBasketDto, ProductDto } from './dto/basket.dto';
+import { CustomerBasketDto, SaveBasketItemsDto, ProductDto } from './dto/basket.dto';
 export declare class BasketService {
     private readonly databaseService;
     private readonly eventEmitter;
@@ -9,5 +9,6 @@ export declare class BasketService {
         message: string;
     }>;
     fetchProductPrices(products: string[]): Promise<ProductDto[]>;
+    saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto): Promise<void>;
 }
 //# sourceMappingURL=basket.service.d.ts.map

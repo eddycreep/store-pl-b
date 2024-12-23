@@ -18,20 +18,20 @@ let client_basket_id = 0;
 let client_customer_id = 0;
 let client_card_number = '';
 let client_product = [];
+let client_quantity = 0;
 let client_purchase_date = '';
 let client_basket_total_amount = 0;
 let client_payment_method = '';
-let clients_purchasedItem_prices = [];
 let BasketService = class BasketService {
     constructor(databaseService, eventEmitter) {
         this.databaseService = databaseService;
         this.eventEmitter = eventEmitter;
     }
     async saveCustomerBasket(CustomerBasketDto) {
-        const { basket_id, customer_id, card_number, product, purchase_date, total_amount, payment_method, } = CustomerBasketDto;
+        const { basket_id, customer_id, card_number, product, quantity, purchase_date, total_amount, payment_method, } = CustomerBasketDto;
         const formattedPurchaseDate = (0, date_fns_1.format)(new Date(purchase_date), "yyyy-MM-dd HH:mm:ss");
         const query = `INSERT INTO loyalty_program.tblbasketinfo(basket_id, customer_id, card_number, purchase_date, total_amount, payment_method) 
-                   VALUES (?, ?, ?, ?, ?, ?)`;
+                    VALUES (?, ?, ?, ?, ?, ?)`;
         try {
             await this.databaseService.query(query, [
                 basket_id,
@@ -41,8 +41,21 @@ let BasketService = class BasketService {
                 total_amount,
                 payment_method,
             ]);
-            console.log('saveCustomerBasket METHOD saved for basket_id: ', basket_id);
-            this.eventEmitter.emit('basket.saved', { product });
+            client_basket_id = basket_id;
+            client_customer_id = customer_id;
+            client_card_number = card_number;
+            client_product = product;
+            client_quantity = quantity;
+            client_purchase_date = formattedPurchaseDate;
+            client_basket_total_amount = total_amount;
+            client_payment_method = payment_method;
+            console.log('[CUSTOMER BASKET SAVED]: ', basket_id);
+            this.eventEmitter.emit('basket.saved', {
+                basket_id,
+                customer_id,
+                quantity,
+                product,
+            });
             return { message: 'Basket successfully saved.' };
         }
         catch (error) {
@@ -57,11 +70,31 @@ let BasketService = class BasketService {
                 const results = await this.databaseService.query(query, [product]);
                 return results;
             }));
-            clients_purchasedItem_prices = productPrices.flat();
-            return productPrices.flat();
+            const flattenedProductPrices = productPrices.flat();
+            this.eventEmitter.emit('basket.items.save', { productPrices: flattenedProductPrices });
+            return flattenedProductPrices;
         }
         catch (error) {
             throw new common_1.BadRequestException('Error fetching product prices: ' + error.message);
+        }
+    }
+    async saveCustomerBasketItems(saveBasketItemsDto) {
+        const { basket_id, customer_id, product, product_price, quantity } = saveBasketItemsDto;
+        const query = `INSERT INTO loyalty_program.tblbasketinfo_items(basket_id, customer_id, product, quantity, product_price, insertion_time)VALUES(?, ?, ?, ?, ?, ?)`;
+        const insertionTime = (0, date_fns_1.format)(new Date(), "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX");
+        try {
+            await Promise.all(product.map((productName) => this.databaseService.query(query, [
+                basket_id,
+                customer_id,
+                productName,
+                quantity,
+                product_price,
+                insertionTime,
+            ])));
+            console.log('[SUCCESS] Basket items successfully saved.');
+        }
+        catch (error) {
+            throw new common_1.BadRequestException('Error saving basket items: ' + error.message);
         }
     }
 };

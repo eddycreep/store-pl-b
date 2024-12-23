@@ -83,16 +83,16 @@ export class BasketController {
         }
     }
 
-    // @Post('savecustomerbasketitems')
-    // async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
-    //   console.log('Received SaveBasketItemsDto:', saveBasketItemsDto); // Log the input
-    //   try {
-    //     return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
-    //   } catch (error) {
-    //     console.error('Error in controller:', error.message);
-    //     throw new BadRequestException(error.message);
-    //   }
-    // }
+    @Post('savecustomerbasketitems')
+    async saveCustomerBasketItems(@Body() saveBasketItemsDto: SaveBasketItemsDto) {
+      console.log('Received SaveBasketItemsDto:', saveBasketItemsDto); // Log the input
+      try {
+        return await this.basketService.saveCustomerBasketItems(saveBasketItemsDto);
+      } catch (error) {
+        console.error('Error in controller:', error.message);
+        throw new BadRequestException(error.message);
+      }
+    }
 
   
     // @Get('checkloyalty/:CustomerID')

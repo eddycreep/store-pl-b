@@ -1,5 +1,5 @@
 import { BasketService } from './basket.service';
-import { CustomerBasketDto, ProductDto } from './dto/basket.dto';
+import { CustomerBasketDto, ProductDto, SaveBasketItemsDto } from './dto/basket.dto';
 export declare class BasketController {
     private readonly basketService;
     constructor(basketService: BasketService);
@@ -7,5 +7,6 @@ export declare class BasketController {
         message: string;
     }>;
     fetchProductPrices(productDescription: string): Promise<ProductDto[]>;
+    saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto): Promise<void>;
 }
 //# sourceMappingURL=basket.controller.d.ts.map

@@ -4,18 +4,15 @@ import { DatabaseService } from '../database/database.service';
 import { CustomerBasketDto, SaveBasketItemsDto, UpdateBasketItemPricesDto, FinalTransactionDto, ProductDto, LoyaltyCustomersDto, ProductSpecialsDto, CombinedProductSpecialsDto } from './dto/basket.dto';
 import { format } from "date-fns";
 
-// global variable for 'saveCustomerBasket'
+// global variable for 'saveCustomerBasket' 
 let client_basket_id = 0;
 let client_customer_id = 0;
 let client_card_number = '';
 let client_product = [];
+let client_quantity = 0;
 let client_purchase_date = '';
 let client_basket_total_amount = 0;
 let client_payment_method = '';
-
-// global variable for 'fetchProductPrices'
-let clients_purchasedItem_prices = []
-
 
 @Injectable()
 export class BasketService {
@@ -33,6 +30,7 @@ export class BasketService {
       customer_id,
       card_number,
       product,
+      quantity,
       purchase_date,
       total_amount,
       payment_method,
@@ -41,7 +39,7 @@ export class BasketService {
     const formattedPurchaseDate = format(new Date(purchase_date), "yyyy-MM-dd HH:mm:ss");
 
     const query = `INSERT INTO loyalty_program.tblbasketinfo(basket_id, customer_id, card_number, purchase_date, total_amount, payment_method) 
-                   VALUES (?, ?, ?, ?, ?, ?)`;
+                    VALUES (?, ?, ?, ?, ?, ?)`;
 
     try {
       // Save basket data to the database
@@ -54,11 +52,27 @@ export class BasketService {
         payment_method,
       ]);
 
-      console.log('saveCustomerBasket METHOD saved for basket_id: ', basket_id);
+      // Update global variables with values from the JSON body
+      client_basket_id = basket_id; 
+      client_customer_id = customer_id;
+      client_card_number = card_number;
+      client_product = product;
+      client_quantity = quantity;
+      client_purchase_date = formattedPurchaseDate; 
+      client_basket_total_amount = total_amount;
+      client_payment_method = payment_method;
+
+      console.log('[CUSTOMER BASKET SAVED]: ', basket_id);
 
       // Emit event with additional logging
-      this.eventEmitter.emit('basket.saved', { product });
-      //console.log('triggered `basket.saved` event.......', basket_id);
+      //this.eventEmitter.emit('basket.saved', { product });
+
+      this.eventEmitter.emit('basket.saved', { 
+        basket_id,
+        customer_id,
+        quantity,
+        product,
+      });
 
       return { message: 'Basket successfully saved.' };
     } catch (error) {
@@ -78,53 +92,51 @@ export class BasketService {
         })
       );
 
-      clients_purchasedItem_prices = productPrices.flat();
+      // Flatten the results array
+      const flattenedProductPrices = productPrices.flat();
+
+      // Emit the 'basket.items.save' event with the necessary data
+      this.eventEmitter.emit('basket.items.save', { productPrices: flattenedProductPrices });
 
       // Flatten the results array and return the product prices
-      return productPrices.flat();
+      return flattenedProductPrices;
     } catch (error) {
       throw new BadRequestException('Error fetching product prices: ' + error.message);
     }
   }
   
 
-  // async saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto) {
-  //   const { basket_id, customer_id, product, quantity } = saveBasketItemsDto;
+  async saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto) {
+    const { basket_id, customer_id, product, product_price, quantity } = saveBasketItemsDto;
 
 
-  //   const query = `INSERT INTO loyalty_program.tblbasketinfo_items(basket_id, customer_id, product, quantity, product_price, insertion_time)VALUES(?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO loyalty_program.tblbasketinfo_items(basket_id, customer_id, product, quantity, product_price, insertion_time)VALUES(?, ?, ?, ?, ?, ?)`;
 
-  //   const insertionTime = format(
-  //     new Date(),
-  //     "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX"
-  //   );
+    const insertionTime = format(
+      new Date(),
+      "EEE MMM dd yyyy HH:mm:ss 'GMT'XXX"
+    );
 
-  //   try {
-  //     // Map through the 'product' array and insert each product individually
-  //     return Promise.all(
-  //       product.map((productName) => {
-  //         // Create a new object for each product
-  //         const itemDto = new SaveBasketItemsDto();
-  //         itemDto.basket_id = basket_id;
-  //         itemDto.customer_id = customer_id;
-  //         itemDto.product = [productName]; // Assign product as a string[] (array with one element)
-  //         itemDto.quantity = quantity;
-  //         itemDto.insertion_time = insertionTime;
+    try {
+      // Map through the product array and insert each product individually
+      await Promise.all(
+        product.map((productName) =>
+          this.databaseService.query(query, [
+            basket_id,          // Basket ID
+            customer_id,        // Customer ID
+            productName,        // Product description
+            quantity,           // Quantity
+            product_price,      // Price of the product
+            insertionTime,      // Timestamp of the insertion
+          ])
+        )
+      );
 
-  //         // Pass the correct number of values (matching the columns in the query)
-  //         return this.databaseService.query(query, [
-  //           itemDto.basket_id,         // Basket ID
-  //           itemDto.customer_id,       // Customer ID
-  //           productName,               // Current product (as a string for the query)
-  //           itemDto.quantity,          // Quantity of the product
-  //           itemDto.insertion_time,    // Insertion time
-  //         ]);
-  //       })
-  //     );
-  //   } catch (error) {
-  //     throw new BadRequestException('Error saving basket items: ' + error.message);
-  //   }
-  // }
+      console.log('[SUCCESS] Basket items successfully saved.');
+    } catch (error) {
+      throw new BadRequestException('Error saving basket items: ' + error.message);
+    }
+  }
 
   // async checkLoyaltyCustomer(customerId: string): Promise<LoyaltyCustomersDto[]> {
   //   // SQL query to check the loyalty tier for a specific customer
