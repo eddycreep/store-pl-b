@@ -3,18 +3,18 @@ import { SaveSpecialDto, SaveSpecialItemsDto, SaveCombinedSpecialItemsDto, SaveR
 export declare class AdminService {
     private readonly databaseService;
     constructor(databaseService: DatabaseService);
-    saveSpecial(data: SaveSpecialDto): Promise<import("mysql2").QueryResult>;
+    saveSpecial(data: SaveSpecialDto): Promise<any>;
     getSpecialID(specialName: string): Promise<any>;
-    saveSpecialItems(saveSpecialItemsDto: SaveSpecialItemsDto): Promise<import("mysql2").QueryResult>;
-    saveCombinedSpecialItems(saveCombinedSpecialItemsDto: SaveCombinedSpecialItemsDto): Promise<import("mysql2").QueryResult>;
-    getAllRewards(): Promise<import("mysql2").QueryResult>;
+    saveSpecialItems(saveSpecialItemsDto: SaveSpecialItemsDto): Promise<any>;
+    saveCombinedSpecialItems(saveCombinedSpecialItemsDto: SaveCombinedSpecialItemsDto): Promise<any>;
+    getAllRewards(): Promise<any>;
     saveReward(data: SaveRewardsDto): Promise<{
         message: string;
     }>;
     updateReward(rewardId: number, updateRewardsDto: UpdateRewardsDto): Promise<{
         message: string;
     }>;
-    getAllSurveys(): Promise<import("mysql2").QueryResult>;
+    getAllSurveys(): Promise<any>;
     saveSurvey(data: SaveSurveyDto): Promise<{
         message: string;
     }>;

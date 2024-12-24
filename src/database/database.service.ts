@@ -1,53 +1,48 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import * as mysql from 'mysql2/promise';
+import * as mysql from 'mysql2/promise'; // Using `mysql2/promise` for asynchronous operations
+import * as dotenv from 'dotenv'; // Importing dotenv to configure environment variables
+import { join } from 'path'; // Importing join to handle file paths
+
+// Loading the .env file from the specified filepath
+dotenv.config({ path: join(__dirname, '..', '..', '..', '.env') });
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
-  private pool: mysql.Pool;
+  private connection: mysql.Connection; // Declaring a private property for the MySQL connection
 
-  constructor() {
-    this.pool = mysql.createPool({
-      host: process.env.HOST,
-      user: process.env.USER,
-      password: process.env.PASSWORD,
-      database: process.env.DATABASE,
-      waitForConnections: true,
-      connectionLimit: 10,
-      queueLimit: 0,
-      connectTimeout: 30000, // 30 seconds
-  });  
-  }
-
-  async query(sql: string, params: any[]) {
+  async onModuleInit() {
+    // Lifecycle hook that executes when the module initializes
     try {
-        const [results] = await this.pool.execute(sql, params);
-        return results;
+      this.connection = await mysql.createConnection({
+        host: process.env.HOST, // Fetching database host from environment variables
+        port: Number(process.env.DB_PORT), // Converting port to a number (3306 for MySQL)
+        user: process.env.USER, // Fetching database username
+        password: process.env.PASSWORD, // Fetching database password
+        database: process.env.DATABASE, // Fetching database name
+      });
+      console.log('DB connected successfully');
     } catch (error) {
-        console.error('Database query error:', {
-            message: error.message,
-            code: error.code,
-            stack: error.stack,
-        });
-        throw error;
+      console.error('Error connecting to DB:', error.message); // Enhanced error logging
+      process.exit(1); // Exiting the application on a critical failure
     }
   }
 
-  async onModuleInit() {
-    let attempts = 5;
-    while (attempts > 0) {
-        try {
-            const connection = await this.pool.getConnection();
-            console.log('Database has been connected successfully');
-            connection.release();
-            return;
-          } catch (error) {
-            console.error(`Failed to connect to database. Retries left: ${--attempts}`, {
-              errorMessage: error.message,
-              errorStack: error.stack,
-            });
-            
-            if (attempts === 0) throw error;
-          }
+  async query(sql: string, params: any[]): Promise<any> {
+    // Method to execute queries using the provided SQL and parameters
+    try {
+      const [results] = await this.connection.execute(sql, params); // Using execute for parameterized queries
+      return results;
+    } catch (error) {
+      console.error('Error executing query:', error.message); // Logging query errors
+      throw new Error('Database query failed'); // Throwing a generic error
+    }
+  }
+
+  async closeConnection(): Promise<void> {
+    // Gracefully closing the database connection
+    if (this.connection) {
+      await this.connection.end();
+      console.log('DB connection closed successfully');
     }
   }
 }
