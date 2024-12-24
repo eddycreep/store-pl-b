@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminService = void 0;
-const common_1 = require("@nestjs/common");
 const database_service_1 = require("../database/database.service");
+const common_1 = require("@nestjs/common");
 let AdminService = class AdminService {
     constructor(databaseService) {
         this.databaseService = databaseService;

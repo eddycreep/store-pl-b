@@ -13,10 +13,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasketController = void 0;
-const common_1 = require("@nestjs/common");
 const basket_service_1 = require("./basket.service");
-const basket_dto_1 = require("./dto/basket.dto");
 const swagger_1 = require("@nestjs/swagger");
+const common_1 = require("@nestjs/common");
+const basket_dto_1 = require("./dto/basket.dto");
 let BasketController = class BasketController {
     constructor(basketService) {
         this.basketService = basketService;
@@ -27,7 +27,23 @@ let BasketController = class BasketController {
     async fetchProductPrices(productDescription) {
         try {
             const products = productDescription.split(',').map(item => item.trim());
-            return await this.basketService.fetchProductPrices(products);
+            const productPrices = await this.basketService.fetchProductPrices(products);
+            const productsWithPrices = productPrices.map(product => product.description);
+            const productsWithoutPrices = products.filter(product => !productsWithPrices.includes(product));
+            let message;
+            if (productsWithPrices.length === 1) {
+                message = `Prices returned for '${productsWithPrices[0]}'`;
+            }
+            else if (productsWithPrices.length > 1) {
+                message = `Prices returned for '${productsWithPrices.join(', ')}', No prices were found for '${productsWithoutPrices.join(', ')}'`;
+            }
+            else {
+                message = 'No prices were found for the requested items.';
+            }
+            return {
+                message,
+                productPrices
+            };
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -45,7 +61,14 @@ let BasketController = class BasketController {
     }
     async checkLoyaltyCustomer(customerId) {
         try {
-            return await this.basketService.checkLoyaltyCustomer(customerId);
+            const loyaltyData = await this.basketService.checkLoyaltyCustomer(customerId);
+            const message = loyaltyData.length > 0
+                ? "The customer has signed up for loyalty program"
+                : "The customer has NOT signed up for loyalty program";
+            return {
+                message,
+                loyaltyData
+            };
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -54,7 +77,23 @@ let BasketController = class BasketController {
     async checkProductSpecials(productDescription) {
         try {
             const products = productDescription.split(',').map(item => item.trim());
-            return await this.basketService.checkProductSpecials(products);
+            const normal_specials = await this.basketService.checkProductSpecials(products);
+            const productsWithSpecials = normal_specials.map(special => special.product_description);
+            let message;
+            if (productsWithSpecials.length === 1) {
+                message = `Normal Specials found for the item '${productsWithSpecials[0]}'`;
+            }
+            else if (productsWithSpecials.length > 1) {
+                const productWithoutSpecials = products.filter(product => !productsWithSpecials.includes(product));
+                message = `Normal Specials found for the item(s) '${productsWithSpecials.join(', ')}', No specials were found for the item(s) '${productWithoutSpecials.join(', ')}'`;
+            }
+            else {
+                message = 'No Normal Specials were found for the purchased item(s).';
+            }
+            return {
+                message,
+                normal_specials
+            };
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -63,7 +102,24 @@ let BasketController = class BasketController {
     async checkCombinedSpecials(productDescription) {
         try {
             const products = productDescription.split(',').map(item => item.trim());
-            return await this.basketService.checkCombinedSpecials(products);
+            const combined_specials = await this.basketService.checkCombinedSpecials(products);
+            const productsWithSpecials = combined_specials.map(special => special.product_description);
+            let message;
+            if (productsWithSpecials.length === 1) {
+                const productWithoutSpecials = products.filter(product => !productsWithSpecials.includes(product));
+                message = `The item '${productsWithSpecials[0]}' is linked to a combined special but no specials were found for the items '${productWithoutSpecials.join(', ')}'`;
+            }
+            else if (productsWithSpecials.length > 1) {
+                const productWithoutSpecials = products.filter(product => !productsWithSpecials.includes(product));
+                message = `The items '${productsWithSpecials.join(', ')}' are linked to a combined special but no specials were found for the items '${productWithoutSpecials.join(', ')}'`;
+            }
+            else {
+                message = 'No Combined Specials were found for the purchased item(s).';
+            }
+            return {
+                message,
+                combined_specials
+            };
         }
         catch (error) {
             throw new common_1.BadRequestException(error.message);
@@ -98,8 +154,9 @@ __decorate([
             properties: {
                 basket_id: { type: 'integer', example: 101, description: 'ID of the basket' },
                 customer_id: { type: 'integer', example: 202, description: 'ID of the customer' },
-                product: { type: 'array', example: [], description: 'Name of the products' },
-                quantity: { type: 'integer', example: 3, description: 'Quantity of the product purchased' },
+                card_number: { type: 'string', example: 961219820491, description: 'Customers card number' },
+                product: { type: 'array', example: [], description: 'List of the products' },
+                quantity: { type: 'integer', example: 3, description: 'Quantity of the products purchased' },
                 purchase_date: { type: 'string', example: '2023-10-14 13:25:00', description: 'Date of the purchased basket' },
                 total_amount: { type: 'number', example: 45.99, description: 'Total basket amount' },
                 payment_method: { type: 'string', example: 'Cash', description: 'Payment method of the basket' },
@@ -194,7 +251,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], BasketController.prototype, "saveFinalTransaction", null);
 exports.BasketController = BasketController = __decorate([
-    (0, swagger_1.ApiTags)('Basket'),
+    (0, swagger_1.ApiTags)('API'),
     (0, common_1.Controller)('basket'),
     __metadata("design:paramtypes", [basket_service_1.BasketService])
 ], BasketController);

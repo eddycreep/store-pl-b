@@ -1,10 +1,11 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { format } from "date-fns";
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { DatabaseService } from '../database/database.service';
-import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, LoyaltyCustomersDto, ProductSpecialsDto, CombinedProductSpecialsDto, FinalTransactionDto, BasketItemsDiscDto } from './dto/basket.dto';
-import { format } from "date-fns";
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { CustomerBasketDto, ProductDto, SaveBasketItemsDto, LoyaltyCustomersDto, 
+ProductSpecialsDto, CombinedProductSpecialsDto, FinalTransactionDto, BasketItemsDiscDto } from './dto/basket.dto';
 
-// global variable for 'saveCustomerBasket' 
+// global variables for 'saveCustomerBasket' 
 let client_basket_id = 0;
 let client_customer_id = 0;
 let client_card_number = '';
@@ -161,7 +162,7 @@ export class BasketService {
       return results;
     } catch (error) {
       // Catch and throw any errors with a detailed message
-      throw new BadRequestException('Error checking loyalty customer: ' + error.message);
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -260,7 +261,6 @@ export class BasketService {
       );
     }
   }
-  
 
   async saveFinalTransaction(finalTransactionDto: FinalTransactionDto) {
     const { basket_id, customer_id, card_number, basket_quantity, total_basket_amount, disc_total_basket_amount, payment_method, purchase_date } = finalTransactionDto;

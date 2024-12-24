@@ -10,10 +10,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasketService = void 0;
-const common_1 = require("@nestjs/common");
+const date_fns_1 = require("date-fns");
 const event_emitter_1 = require("@nestjs/event-emitter");
 const database_service_1 = require("../database/database.service");
-const date_fns_1 = require("date-fns");
+const common_1 = require("@nestjs/common");
 let client_basket_id = 0;
 let client_customer_id = 0;
 let client_card_number = '';
@@ -109,7 +109,7 @@ let BasketService = class BasketService {
             return results;
         }
         catch (error) {
-            throw new common_1.BadRequestException('Error checking loyalty customer: ' + error.message);
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async checkProductSpecials(products) {
