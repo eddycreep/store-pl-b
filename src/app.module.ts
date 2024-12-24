@@ -10,18 +10,18 @@ import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
-    // ConfigModule to load environment variables
-    ConfigModule.forRoot({
-      isGlobal: true, // Makes the configuration available globally
-      envFilePath: '.env', // Specify the path to the environment variables file
+    ConfigModule.forRoot({ // ConfigModule to load environment variables
+      isGlobal: true, // globally available
+      envFilePath: '.env', // path to the environment variables file
     }),
 
-    // Import application modules
-    UsersModule,   // Module for managing users
-    BasketModule,  // Module for basket-related functionality
-    DatabaseModule, ProductsModule, AdminModule // Module for database configuration and connection
+    // import modules
+    UsersModule,  
+    BasketModule, 
+    DatabaseModule, ProductsModule, AdminModule
   ],
-  controllers: [AppController], // Include main application controller
-  providers: [AppService],      // Include main application service
+  controllers: [AppController], // main controller
+  providers: [AppService],      // main service
 })
+
 export class AppModule {}

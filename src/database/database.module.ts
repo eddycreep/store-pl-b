@@ -5,4 +5,5 @@ import { DatabaseService } from './database.service';
   providers: [DatabaseService], // Provide DatabaseService
   exports: [DatabaseService],   // Export DatabaseService to make it accessible in other modules
 })
+
 export class DatabaseModule {}

@@ -43,7 +43,6 @@ export class DatabaseService implements OnModuleInit {
         } catch (error) {
             console.error(`Failed to connect to database. Retries left: ${--attempts}`);
             if (attempts === 0) throw error;
-            await new Promise((res) => setTimeout(res, 2000)); // Wait 2 seconds before retrying
         }
     }
   }
