@@ -13,8 +13,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
-const common_1 = require("@nestjs/common");
 const admin_service_1 = require("./admin.service");
+const common_1 = require("@nestjs/common");
 const admin_dto_1 = require("./dto/admin.dto");
 let AdminController = class AdminController {
     constructor(adminService) {

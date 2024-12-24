@@ -106,13 +106,19 @@ let ProductsService = class ProductsService {
         }
     }
     async getAllProductSpecials() {
-        const query = `SELECT mst.id, mst.item_code, mst.selling_incl_1, mst.special_price_incl, inv.description_1 FROM loyalty_program.tblmultistoretrn mst JOIN loyalty_program.tblinventory inv ON mst.item_code = inv.item_code`;
+        const query = `SELECT sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id, 
+        sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, 
+        spi.product_description, spi.special_price 
+        FROM loyalty_program.tblspecials sp
+        JOIN loyalty_program.tblspecialitems spi
+        ON sp.special_id = spi.special_id 
+        WHERE sp.special_type = "Special"`;
         try {
             return await this.databaseService.query(query, null);
         }
         catch (error) {
-            console.error('Error fetching products:', error.message);
-            throw new common_2.BadRequestException('Error fetching products: ' + error.message);
+            console.error('Error fetching all product specials:', error.message);
+            throw new common_2.BadRequestException('Error fetching all product specials: ' + error.message);
         }
     }
     async getAllCombinedSpecials() {

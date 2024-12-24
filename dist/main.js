@@ -8,7 +8,11 @@ dotenv.config();
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const port = parseInt(process.env.PORT || '3000', 10);
-    console.log("Using port:", process.env.PORT);
+    app.enableCors({
+        origin: 'http://localhost:3000',
+        methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
+        allowedHeaders: 'Content-Type, Authorization',
+    });
     (0, swagger_1.setupSwagger)(app, port);
     await app.listen(port, '0.0.0.0');
     console.log(`Application is running on: http://localhost:${port}`);

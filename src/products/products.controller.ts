@@ -62,7 +62,7 @@ export class ProductsController {
         }
     }
 
-    @Get('getallproductSpecials')
+    @Get('getallproductspecials')
     @ApiOperation({ summary: 'Retrieve all product specials' })
     @ApiResponse({ status: 200, description: 'List of all product specials.' })
     async getAllProductSpecials() {

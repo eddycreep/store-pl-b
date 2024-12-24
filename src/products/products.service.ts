@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
-import { ProductstDto, ActiveProductSpecialsDto, UpcomingProductSpecialsDto, ActiveCombinedSpecialsDto, UpcomingCombinedSpecialsDto, AllProductSpecialsDto, AllCombinedSpecialsDto, AllSpecialsDto, UpcomingSpecialsDto, ActiveRewardsDto, UpcomingRewardsDto, ActiveSurveysDto, UpcomingSurveysDto, StoresDto, LoyaltyCustomersDto } from './dto/products.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @Injectable()
@@ -19,7 +18,7 @@ export class ProductsService {
         }
     }
 
-    //REWARDS
+    // specials
 
     async getActiveProductSpecials() {
         const query = `
@@ -85,7 +84,6 @@ export class ProductsService {
         }
     }
 
-
     async getUpcomingCombinedSpecials() {
         const query = `
             SELECT sp.special_id, sp.special, sp.special_type, sp.store_id, sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, scg.product_description, scg.special_price
@@ -106,18 +104,23 @@ export class ProductsService {
     }
 
     async getAllProductSpecials() {
-        const query = `SELECT mst.id, mst.item_code, mst.selling_incl_1, mst.special_price_incl, inv.description_1 FROM loyalty_program.tblmultistoretrn mst JOIN loyalty_program.tblinventory inv ON mst.item_code = inv.item_code`;
+        const query = `SELECT sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id, 
+        sp.start_date, sp.expiry_date, sp.special_value, sp.isActive, 
+        spi.product_description, spi.special_price 
+        FROM loyalty_program.tblspecials sp
+        JOIN loyalty_program.tblspecialitems spi
+        ON sp.special_id = spi.special_id 
+        WHERE sp.special_type = "Special"`;
 
         try {
             // Pass `null` as the second argument for the parameters
             return await this.databaseService.query(query, null);
         } catch (error) {
-            console.error('Error fetching products:', error.message);
-            throw new BadRequestException('Error fetching products: ' + error.message);
+            console.error('Error fetching all product specials:', error.message);
+            throw new BadRequestException('Error fetching all product specials: ' + error.message);
         }
     }
 
-    // Retrieves all combined specials
     async getAllCombinedSpecials() {
         const query = `
             SELECT sp.special_id, sp.special_name, sp.special, sp.special_type, sp.store_id, 
@@ -136,7 +139,6 @@ export class ProductsService {
         }
     }
 
-    // Retrieves all active specials
     async getAllActiveSpecials() {
         const query = `SELECT special_id, special_name, special, special_type, store_id, start_date, expiry_date, special_value, isActive FROM loyalty_program.tblspecials WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
 
@@ -148,7 +150,6 @@ export class ProductsService {
         }
     }
 
-    // Retrieves all upcoming specials
     async getAllUpcomingSpecials() {
         const query = `SELECT special_id, special_name, special, special_type, store_id, start_date, expiry_date, special_value, isActive FROM loyalty_program.tblspecials WHERE isActive = 1 AND start_date >= CURDATE()`;
 
@@ -160,9 +161,8 @@ export class ProductsService {
         }
     }
 
-    //REWARDS
+    // rewards
 
-    // Retrieves active rewards
     async getActiveRewards() {
         const query = `SELECT reward_id, reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive FROM loyalty_program.tblrewards WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
 
@@ -174,7 +174,6 @@ export class ProductsService {
         }
     }
 
-    // Retrieves upcoming rewards
     async getUpcomingRewards() {
         const query = `SELECT reward_id, reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive FROM loyalty_program.tblrewards WHERE isActive = 1 AND start_date >= CURDATE()`;
 
@@ -186,7 +185,7 @@ export class ProductsService {
         }
     }
 
-    //SURVEYS
+    // surveys
 
     async getActiveSurveys() {
         const query = `SELECT survey_id, survey_title, survey_category, store_id, region, loyalty_tier, start_date, expiry_date, isActive FROM loyalty_program.tblsurvey WHERE isActive = 1 AND start_date <= CURDATE() AND expiry_date >= CURDATE()`;
@@ -199,7 +198,6 @@ export class ProductsService {
         }
     }
 
-
     async getUpcomingSurveys() {
         const query = `SELECT survey_id, survey_title, survey_category, store_id, region, loyalty_tier, start_date, expiry_date, isActive FROM loyalty_program.tblsurvey WHERE isActive = 1 AND start_date >= CURDATE()`;
 
@@ -211,6 +209,7 @@ export class ProductsService {
         }
     }
 
+    // stores x customers
 
     async getStores() {
         const query = `SELECT id, code, description, address_1, address_2, address_3, address_4, address_5, address_6 FROM loyalty_program.tblmultistore`;
@@ -223,7 +222,6 @@ export class ProductsService {
         }
     }
 
-
     async getCustomers() {
         const query = `SELECT ID, Code, Description, Address01, Address02, Address03, Address04, Address05, Address06, Address07, birth_day FROM loyalty_program.tblcustomers`;
 
@@ -234,7 +232,6 @@ export class ProductsService {
             throw new BadRequestException('Error fetching customers: ' + error.message);
         }
     }
-
 
     async getLoyaltyCustomers() {
         const query = `SELECT CustomerID, FirstName, LastName, MobileNumber, Age, Gender, Birthday, Ethnicity, EmploymentStatus, Email, LoyaltyTier FROM loyalty_program.tblloyaltycustomers`;

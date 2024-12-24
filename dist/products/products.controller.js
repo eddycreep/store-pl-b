@@ -129,7 +129,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getUpcomingCombinedSpecials", null);
 __decorate([
-    (0, common_1.Get)('getallproductSpecials'),
+    (0, common_1.Get)('getallproductspecials'),
     (0, swagger_1.ApiOperation)({ summary: 'Retrieve all product specials' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'List of all product specials.' }),
     __metadata("design:type", Function),
