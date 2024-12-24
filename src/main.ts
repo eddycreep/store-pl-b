@@ -8,7 +8,7 @@ dotenv.config(); // Load environment variables
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const port = parseInt(process.env.PORT || '3000', 10); // Use Render's PORT environment variable or SERVERPORT for local
+  const port = parseInt(process.env.PORT, 10) || 3000; // Use Render's PORT environment variable or SERVERPORT for local
 
   // Enable CORS
   app.enableCors({

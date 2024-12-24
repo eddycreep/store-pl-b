@@ -14,7 +14,7 @@ export class DatabaseService implements OnModuleInit {
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-      connectTimeout: 120000,
+      connectTimeout: 30000, // 30 seconds
   });  
   }
 
@@ -40,11 +40,14 @@ export class DatabaseService implements OnModuleInit {
             console.log('Database has been connected successfully');
             connection.release();
             return;
-        } catch (error) {
-            console.error(`Failed to connect to database. Retries left: ${--attempts}`);
+          } catch (error) {
+            console.error(`Failed to connect to database. Retries left: ${--attempts}`, {
+              errorMessage: error.message,
+              errorStack: error.stack,
+            });
+            
             if (attempts === 0) throw error;
-            await new Promise((res) => setTimeout(res, 2000)); // Wait 2 seconds before retrying
-        }
+          }
     }
   }
 }
