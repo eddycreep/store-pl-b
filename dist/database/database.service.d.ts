@@ -1,8 +1,9 @@
 import { OnModuleInit } from '@nestjs/common';
+import * as mysql from 'mysql2/promise';
 export declare class DatabaseService implements OnModuleInit {
-    private connection;
+    private pool;
+    constructor();
+    query(sql: string, params: any[]): Promise<mysql.QueryResult>;
     onModuleInit(): Promise<void>;
-    query(sql: string, params: any[]): Promise<any>;
-    closeConnection(): Promise<void>;
 }
 //# sourceMappingURL=database.service.d.ts.map
