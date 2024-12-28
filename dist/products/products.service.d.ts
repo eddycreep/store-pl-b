@@ -19,5 +19,6 @@ export declare class ProductsService {
     getCustomers(): Promise<import("mysql2").QueryResult>;
     getLoyaltyCustomers(): Promise<import("mysql2").QueryResult>;
     getLoyaltyTiers(): Promise<import("mysql2").QueryResult>;
+    getAgeGroups(): Promise<import("mysql2").QueryResult>;
 }
 //# sourceMappingURL=products.service.d.ts.map

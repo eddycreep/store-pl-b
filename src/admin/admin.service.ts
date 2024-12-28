@@ -122,28 +122,32 @@ export class AdminService {
    */
     async saveReward(data: SaveRewardsDto) {
         const query = `
-        INSERT INTO loyalty_program.tblrewards 
-        (reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO loyalty_program.tblrewards 
+            (reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const params = [
-        data.reward_title,
-        data.description,
-        data.reward,
-        data.reward_type,
-        data.reward_price,
-        data.store_id,
-        data.region,
-        data.start_date,
-        data.expiry_date,
-        data.loyalty_tier,
-        data.age_group,
-        data.isActive,
+            data.reward_title,
+            data.description,
+            data.reward,
+            data.reward_type,
+            data.reward_price,
+            data.store_id,
+            data.region,
+            data.start_date,
+            data.expiry_date,
+            data.loyalty_tier,
+            data.age_group,
+            data.isActive,
         ];
 
         try {
-        await this.databaseService.query(query, params);
-        return { message: 'Reward saved successfully' };
+            await this.databaseService.query(query, params);
+            return { 
+                message: 'Reward saved successfully',
+                status_text: 'Success'
+            };
+
         } catch (error) {
         console.error('Error saving reward:', error.message);
         throw new BadRequestException('Unable to save reward');

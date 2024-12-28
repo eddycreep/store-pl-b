@@ -18,12 +18,6 @@ export class AdminController {
         return this.adminService.getSpecialInfo(specialName);
     }
 
-
-    @Get('/get-reward-info/:reward_title')
-    async getRewardInfo(@Param('reward_title') rewardTitle: string) {
-        return this.adminService.getRewardInfo(rewardTitle);
-    }
-
     @Post('/save-special-items')
     async saveSpecialItems(@Body() saveSpecialItemsDto: SaveSpecialItemsDto) {
         return this.adminService.saveSpecialItems(saveSpecialItemsDto);
@@ -46,6 +40,11 @@ export class AdminController {
     @Post('save-reward')
     async saveReward(@Body() saveRewardsDto: SaveRewardsDto) {
         return this.adminService.saveReward(saveRewardsDto);
+    }
+
+    @Get('/get-reward-info/:reward_title')
+    async getRewardInfo(@Param('reward_title') rewardTitle: string) {
+        return this.adminService.getRewardInfo(rewardTitle);
     }
 
     /**

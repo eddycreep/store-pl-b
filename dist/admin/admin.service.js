@@ -88,9 +88,9 @@ let AdminService = class AdminService {
     }
     async saveReward(data) {
         const query = `
-        INSERT INTO loyalty_program.tblrewards 
-        (reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO loyalty_program.tblrewards 
+            (reward_title, description, reward, reward_type, reward_price, store_id, region, start_date, expiry_date, loyalty_tier, age_group, isActive)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const params = [
             data.reward_title,
@@ -108,7 +108,10 @@ let AdminService = class AdminService {
         ];
         try {
             await this.databaseService.query(query, params);
-            return { message: 'Reward saved successfully' };
+            return {
+                message: 'Reward saved successfully',
+                status_text: 'Success'
+            };
         }
         catch (error) {
             console.error('Error saving reward:', error.message);

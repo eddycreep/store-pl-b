@@ -11,6 +11,7 @@ export declare class AdminService {
     getRewardInfo(rewardTitle: string): Promise<RewardInfoDto[]>;
     saveReward(data: SaveRewardsDto): Promise<{
         message: string;
+        status_text: string;
     }>;
     updateReward(rewardId: number, updateRewardsDto: UpdateRewardsDto): Promise<{
         message: string;

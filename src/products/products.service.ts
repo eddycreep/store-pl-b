@@ -255,4 +255,16 @@ export class ProductsService {
             throw new BadRequestException('Error fetching loyalty tiers: ' + error.message);
         }
     }
+
+    
+    async getAgeGroups() {
+        const query = `SELECT * FROM loyalty_program.tblage_groups`;
+
+        try {
+            return await this.databaseService.query(query, null);
+        } catch (error) {
+            console.error('Error fetching age groups:', error.message);
+            throw new BadRequestException('Error fetching age groups: ' + error.message);
+        }
+    }
 }

@@ -5,13 +5,14 @@ export declare class AdminController {
     constructor(adminService: AdminService);
     saveSpecial(saveSpecialDto: SaveSpecialDto): Promise<import("mysql2").QueryResult>;
     getSpecialInfo(specialName: string): Promise<import("./dto/admin.dto").SpecialInfoDto[]>;
-    getRewardInfo(rewardTitle: string): Promise<import("./dto/admin.dto").RewardInfoDto[]>;
     saveSpecialItems(saveSpecialItemsDto: SaveSpecialItemsDto): Promise<import("mysql2").QueryResult>;
     saveCombinedSpecialItems(saveCombinedSpecialItemsDto: SaveCombinedSpecialItemsDto): Promise<import("mysql2").QueryResult>;
     getAllRewards(): Promise<import("mysql2").QueryResult>;
     saveReward(saveRewardsDto: SaveRewardsDto): Promise<{
         message: string;
+        status_text: string;
     }>;
+    getRewardInfo(rewardTitle: string): Promise<import("./dto/admin.dto").RewardInfoDto[]>;
     updateReward(rewardId: number, updateRewardsDto: UpdateRewardsDto): Promise<{
         message: string;
     }>;

@@ -95,6 +95,9 @@ let ProductsController = class ProductsController {
     async getLoyaltyTiers() {
         return await this.productsService.getLoyaltyTiers();
     }
+    async getAgeGroups() {
+        return await this.productsService.getAgeGroups();
+    }
 };
 exports.ProductsController = ProductsController;
 __decorate([
@@ -227,6 +230,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ProductsController.prototype, "getLoyaltyTiers", null);
+__decorate([
+    (0, common_1.Get)('get-age-groups'),
+    (0, swagger_1.ApiOperation)({ summary: 'Retrieve Age Groups' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: 'Age Groups in which Specials/Rewards can be applied to.' }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductsController.prototype, "getAgeGroups", null);
 exports.ProductsController = ProductsController = __decorate([
     (0, swagger_1.ApiTags)('Products'),
     (0, common_1.Controller)('products'),

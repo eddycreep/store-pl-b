@@ -148,4 +148,12 @@ export class ProductsController {
     async getLoyaltyTiers() {
         return await this.productsService.getLoyaltyTiers();
     }
+
+
+    @Get('get-age-groups')
+    @ApiOperation({ summary: 'Retrieve Age Groups' })
+    @ApiResponse({ status: 200, description: 'Age Groups in which Specials/Rewards can be applied to.' })
+    async getAgeGroups() {
+        return await this.productsService.getAgeGroups();
+    }
 }

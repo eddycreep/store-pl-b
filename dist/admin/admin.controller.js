@@ -26,9 +26,6 @@ let AdminController = class AdminController {
     async getSpecialInfo(specialName) {
         return this.adminService.getSpecialInfo(specialName);
     }
-    async getRewardInfo(rewardTitle) {
-        return this.adminService.getRewardInfo(rewardTitle);
-    }
     async saveSpecialItems(saveSpecialItemsDto) {
         return this.adminService.saveSpecialItems(saveSpecialItemsDto);
     }
@@ -40,6 +37,9 @@ let AdminController = class AdminController {
     }
     async saveReward(saveRewardsDto) {
         return this.adminService.saveReward(saveRewardsDto);
+    }
+    async getRewardInfo(rewardTitle) {
+        return this.adminService.getRewardInfo(rewardTitle);
     }
     async updateReward(rewardId, updateRewardsDto) {
         return this.adminService.updateReward(rewardId, updateRewardsDto);
@@ -89,13 +89,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "getSpecialInfo", null);
 __decorate([
-    (0, common_1.Get)('/get-reward-info/:reward_title'),
-    __param(0, (0, common_1.Param)('reward_title')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AdminController.prototype, "getRewardInfo", null);
-__decorate([
     (0, common_1.Post)('/save-special-items'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -122,6 +115,13 @@ __decorate([
     __metadata("design:paramtypes", [admin_dto_1.SaveRewardsDto]),
     __metadata("design:returntype", Promise)
 ], AdminController.prototype, "saveReward", null);
+__decorate([
+    (0, common_1.Get)('/get-reward-info/:reward_title'),
+    __param(0, (0, common_1.Param)('reward_title')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AdminController.prototype, "getRewardInfo", null);
 __decorate([
     (0, common_1.Patch)('update-reward/:reward_id'),
     __param(0, (0, common_1.Param)('reward_id')),
