@@ -1,6 +1,6 @@
 import { DatabaseService } from '../database/database.service';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { SaveSpecialDto, SaveSpecialItemsDto, SaveCombinedSpecialItemsDto, UpdateSpecialDto, SaveRewardsDto, UpdateRewardsDto, 
+import { SaveSpecialDto, SpecialInfoDto, RewardInfoDto, SaveSpecialItemsDto, SaveCombinedSpecialItemsDto, UpdateSpecialDto, SaveRewardsDto, UpdateRewardsDto, 
 GetSurveysDto, SaveSurveyDto, UpdateSurveyDto, GetSurveyIdDto, SaveSurveyQuestionsDto, UpdateSurveyQuestionsDto } from './dto/admin.dto';
 
 @Injectable()
@@ -18,24 +18,43 @@ export class AdminService {
         }
     }
 
-    async getSpecialID(specialName: string) {
-        const query = `SELECT special_id FROM loyalty_program.tblspecials WHERE special_name = ?`;
+    // async getSpecialID(specialName: string) {
+    //     //const query = `SELECT special_id FROM loyalty_program.tblspecials WHERE special_name = ?`;
+    //     const query = `SELECT special_id, special_name, special FROM loyalty_program.tblspecials WHERE special_name = ?`;
     
+    //     try {
+    //         const result: any = await this.databaseService.query(query, [specialName]);
+    
+    //         // Ensure `result` is an array (typical for SELECT queries)
+    //         if (!Array.isArray(result) || result.length === 0) {
+    //             throw new NotFoundException('Special ID not found');
+    //         }
+    
+    //         return result[0];
+    //     } catch (error) {
+    //         console.error('Error retrieving special ID:', error.message);
+    //         throw error;
+    //     }
+    // }
+
+    async getSpecialInfo(specialName: string): Promise<SpecialInfoDto[]> {
+        const query = `SELECT special_id, special_name, special, special_type FROM loyalty_program.tblspecials WHERE special_name = ?`;
+      
         try {
-            const result: any = await this.databaseService.query(query, [specialName]);
-    
-            // Ensure `result` is an array (typical for SELECT queries)
-            if (!Array.isArray(result) || result.length === 0) {
-                throw new NotFoundException('Special ID not found');
+            const results = await this.databaseService.query(query, [specialName]) as SpecialInfoDto[];
+      
+            // If no results are returned, throw a NotFoundException
+            if (results.length === 0) {
+                throw new NotFoundException('Special not found on the loyalty program');
             }
-    
-            return result[0];
+
+            // Return the results (guaranteed to be an array of objects)
+            return results;
         } catch (error) {
-            console.error('Error retrieving special ID:', error.message);
-            throw error;
+            // Catch and throw any errors with a detailed message
+            throw new BadRequestException(error.message);
         }
     }
-    
 
     async saveSpecialItems(saveSpecialItemsDto: SaveSpecialItemsDto) {
         const query = `INSERT INTO loyalty_program.tblspecialitems (special_id, product_description, special_price)VALUES (?, ?, ?)`;
@@ -74,6 +93,26 @@ export class AdminService {
         } catch (error) {
         console.error('Error fetching rewards:', error.message);
         throw new BadRequestException('Unable to fetch rewards');
+        }
+    }
+
+    async getRewardInfo(rewardTitle: string): Promise<RewardInfoDto[]> {
+        const query = `SELECT reward_id, reward_title, reward_type FROM loyalty_program.tblrewards WHERE reward_title = ?`;
+
+
+        try {
+            const results = await this.databaseService.query(query, [rewardTitle]) as RewardInfoDto[];
+      
+            // If no results are returned, throw a NotFoundException
+            if (results.length === 0) {
+                throw new NotFoundException('Reward not found on the loyalty program');
+            }
+
+            // Return the results (guaranteed to be an array of objects)
+            return results;
+        } catch (error) {
+            // Catch and throw any errors with a detailed message
+            throw new BadRequestException(error.message);
         }
     }
 

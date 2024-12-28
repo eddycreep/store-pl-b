@@ -7,22 +7,29 @@ GetSurveysDto, SaveSurveyDto, UpdateSurveyDto, GetSurveyIdDto, SaveSurveyQuestio
 export class AdminController {
     constructor(private readonly adminService: AdminService) {}
 
-    @Post('/savespecial')
+    @Post('/save-special')
     async saveSpecial(@Body() saveSpecialDto: SaveSpecialDto) {
         return this.adminService.saveSpecial(saveSpecialDto);
     }
 
-    @Get('/getspecialid/:special_name')
-    async getSpecialID(@Param('special_name') specialName: string) {
-        return this.adminService.getSpecialID(specialName);
+    // @Get('/getspecialid/:special_name')
+    @Get('/get-special-id/:special_name')
+    async getSpecialInfo(@Param('special_name') specialName: string) {
+        return this.adminService.getSpecialInfo(specialName);
     }
 
-    @Post('/savespecialitems')
+
+    @Get('/get-reward-info/:reward_title')
+    async getRewardInfo(@Param('reward_title') rewardTitle: string) {
+        return this.adminService.getRewardInfo(rewardTitle);
+    }
+
+    @Post('/save-special-items')
     async saveSpecialItems(@Body() saveSpecialItemsDto: SaveSpecialItemsDto) {
         return this.adminService.saveSpecialItems(saveSpecialItemsDto);
     }
 
-    @Post('/savecombinedspecialitems')
+    @Post('/save-combined-special-items')
     async saveCombinedSpecialItems(@Body() saveCombinedSpecialItemsDto: SaveCombinedSpecialItemsDto) {
         return this.adminService.saveCombinedSpecialItems(saveCombinedSpecialItemsDto);
     }
@@ -30,13 +37,13 @@ export class AdminController {
     /**
      * Retrieves all rewards.
      */
-    @Get('getallrewards')
+    @Get('get-all-rewards')
     async getAllRewards() {
         return this.adminService.getAllRewards();
     }
 
 
-    @Post('savereward')
+    @Post('save-reward')
     async saveReward(@Body() saveRewardsDto: SaveRewardsDto) {
         return this.adminService.saveReward(saveRewardsDto);
     }
@@ -46,19 +53,19 @@ export class AdminController {
      * @param rewardId The ID of the reward to update.
      * @param updateRewardsDto Updated reward details.
      */
-    @Patch('updatereward/:reward_id')
+    @Patch('update-reward/:reward_id')
     async updateReward(@Param('reward_id') rewardId: number, @Body() updateRewardsDto: UpdateRewardsDto) {
         return this.adminService.updateReward(rewardId, updateRewardsDto);
     }
 
 
-    @Get('getallsurveys')
+    @Get('get-all-surveys')
     async getAllSurveys() {
         return this.adminService.getAllSurveys();
     }
 
 
-    @Post('savesurvey')
+    @Post('save-survey')
     async saveSurvey(@Body() saveSurveyDto: SaveSurveyDto) {
         try {
             // Call the service to fetch the survey ID
@@ -73,7 +80,7 @@ export class AdminController {
      * Retrieves the survey ID based on the survey title.
      * @param surveyTitle The title of the survey.
      */
-    @Get('getsurveyid/:survey_title')
+    @Get('get-survey-id/:survey_title')
     async getSurveyID(@Param('survey_title') surveyTitle: string) {
         try {
             // Call the service to fetch the survey ID
@@ -88,7 +95,7 @@ export class AdminController {
     * Saves survey questions linked to a specific survey.
     * @param surveyQuestions Data containing survey ID, question text, and type.
     */
-    @Post('savesurveyquestions')
+    @Post('save-survey-questions')
     async saveSurveyQuestions(@Body() surveyQuestionsDto: SaveSurveyQuestionsDto) {
         return this.adminService.saveSurveyQuestions(surveyQuestionsDto);
     }
@@ -98,7 +105,7 @@ export class AdminController {
     * @param surveyId The ID of the survey to update.
     * @param surveyData The updated survey data.
     */
-    @Patch('updatesurvey/:survey_id')
+    @Patch('update-survey/:survey_id')
     async updateSurvey(@Param('survey_id') surveyId: number, @Body() surveyData: UpdateSurveyDto) {
         return this.adminService.updateSurvey(surveyId, surveyData);
     }
@@ -108,7 +115,7 @@ export class AdminController {
     * @param surveyId The ID of the survey whose questions are being updated.
     * @param questionData The updated question data.
     */
-    @Patch('updatesurveyquestions/:survey_id')
+    @Patch('update-survey-questions/:survey_id')
     async updateSurveyQuestions(@Param('survey_id') surveyId: number, @Body() questionData: UpdateSurveyQuestionsDto,) {
         return this.adminService.updateSurveyQuestions(surveyId, questionData);
     }

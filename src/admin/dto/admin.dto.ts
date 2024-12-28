@@ -12,6 +12,20 @@ export class SaveSpecialDto {
     @IsNumber() isActive: number;
 }
 
+export class SpecialInfoDto {
+    @IsNumber()  special_id: number;
+    @IsString()  special_name: string;
+    @IsString()  special: string;
+    @IsString()  special_type: string
+}
+
+export class RewardInfoDto {
+    @IsNumber()  special_id: number;
+    @IsString()  special_name: string;
+    @IsString()  special: string;
+    @IsString()  special_type: string
+}
+
 
 export class SaveSpecialItemsDto {
     @IsNumber() special_id: number;

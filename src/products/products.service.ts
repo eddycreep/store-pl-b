@@ -243,4 +243,16 @@ export class ProductsService {
             throw new BadRequestException('Error fetching loyalty customers: ' + error.message);
         }
     }
+
+
+    async getLoyaltyTiers() {
+        const query = `SELECT * FROM loyalty_program.tblloyaltytiers`;
+
+        try {
+            return await this.databaseService.query(query, null);
+        } catch (error) {
+            console.error('Error fetching loyalty tiers:', error.message);
+            throw new BadRequestException('Error fetching loyalty tiers: ' + error.message);
+        }
+    }
 }

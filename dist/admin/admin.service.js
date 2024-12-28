@@ -26,18 +26,17 @@ let AdminService = class AdminService {
             throw new common_1.BadRequestException('Unable to save special');
         }
     }
-    async getSpecialID(specialName) {
-        const query = `SELECT special_id FROM loyalty_program.tblspecials WHERE special_name = ?`;
+    async getSpecialInfo(specialName) {
+        const query = `SELECT special_id, special_name, special, special_type FROM loyalty_program.tblspecials WHERE special_name = ?`;
         try {
-            const result = await this.databaseService.query(query, [specialName]);
-            if (!Array.isArray(result) || result.length === 0) {
-                throw new common_1.NotFoundException('Special ID not found');
+            const results = await this.databaseService.query(query, [specialName]);
+            if (results.length === 0) {
+                throw new common_1.NotFoundException('Special not found on the loyalty program');
             }
-            return result[0];
+            return results;
         }
         catch (error) {
-            console.error('Error retrieving special ID:', error.message);
-            throw error;
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async saveSpecialItems(saveSpecialItemsDto) {
@@ -72,6 +71,19 @@ let AdminService = class AdminService {
         catch (error) {
             console.error('Error fetching rewards:', error.message);
             throw new common_1.BadRequestException('Unable to fetch rewards');
+        }
+    }
+    async getRewardInfo(rewardTitle) {
+        const query = `SELECT reward_id, reward_title, reward_type FROM loyalty_program.tblrewards WHERE reward_title = ?`;
+        try {
+            const results = await this.databaseService.query(query, [rewardTitle]);
+            if (results.length === 0) {
+                throw new common_1.NotFoundException('Reward not found on the loyalty program');
+            }
+            return results;
+        }
+        catch (error) {
+            throw new common_1.BadRequestException(error.message);
         }
     }
     async saveReward(data) {
