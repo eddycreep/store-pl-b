@@ -5,16 +5,16 @@ const app_module_1 = require("./app.module");
 const dotenv = require("dotenv");
 const swagger_1 = require("./utils/swagger");
 dotenv.config();
-const port = 4000;
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const port = parseInt(process.env.PORT) || 4000;
     app.enableCors({
         origin: 'http://localhost:4000',
         methods: 'GET,POST,PUT,DELETE,PATCH,OPTIONS',
         allowedHeaders: 'Content-Type, Authorization',
     });
     (0, swagger_1.setupSwagger)(app, port);
-    await app.listen(port, '0.0.0.0');
+    await app.listen(process.env.PORT ?? 4000);
     console.log(`Application is running on: http://localhost:${port}`);
 }
 bootstrap();
