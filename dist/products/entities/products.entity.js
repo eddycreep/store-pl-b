@@ -9,24 +9,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDto = void 0;
-const class_validator_1 = require("class-validator");
-class CreateUserDto {
-}
-exports.CreateUserDto = CreateUserDto;
+exports.Item = void 0;
+const typeorm_1 = require("typeorm");
+let Item = class Item {
+    constructor(item) {
+        Object.assign(this, item);
+    }
+};
+exports.Item = Item;
 __decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "name", void 0);
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], Item.prototype, "id", void 0);
 __decorate([
-    (0, class_validator_1.IsEmail)(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "email", void 0);
+], Item.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)(['INTERN', 'ENGINEER', 'ADMIN'], {
-        message: 'Role must be either INTERN, ENGINEER, or ADMIN'
-    }),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "role", void 0);
-//# sourceMappingURL=create-user.dto.js.map
+    (0, typeorm_1.Column)({ default: true }),
+    __metadata("design:type", Boolean)
+], Item.prototype, "public", void 0);
+exports.Item = Item = __decorate([
+    (0, typeorm_1.Entity)(),
+    __metadata("design:paramtypes", [Object])
+], Item);
+//# sourceMappingURL=products.entity.js.map

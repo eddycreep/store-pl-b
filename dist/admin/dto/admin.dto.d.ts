@@ -8,6 +8,18 @@ export declare class SaveSpecialDto {
     special_value: string;
     isActive: number;
 }
+export declare class SpecialInfoDto {
+    special_id: number;
+    special_name: string;
+    special: string;
+    special_type: string;
+}
+export declare class RewardInfoDto {
+    special_id: number;
+    special_name: string;
+    special: string;
+    special_type: string;
+}
 export declare class SaveSpecialItemsDto {
     special_id: number;
     product_description: string;

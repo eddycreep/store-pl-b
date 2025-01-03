@@ -1,90 +1,35 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { NotFoundException } from '@nestjs/common';
+import { format } from "date-fns";
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { UserDto, UserActivtyDto, CreateUserDto } from './dto/user.dto'
+import { EntityManager, Repository } from 'typeorm';
+import { Users } from './entities/user.entity'
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersActivity } from "./entities/user-activity.entity";
 
 @Injectable()
 export class UsersService {
-    private users =  [
-        {
-            id: 1,
-            name: "John Doe",
-            email: "john.doe@example.com",
-            role: "ADMIN"
-        },
-        {
-            id: 2,
-            name: "Jane Smith",
-            email: "jane.smith@example.com",
-            role: "ENGINEER"
-        },
-        {
-            id: 3,
-            name: "Alice Johnson",
-            email: "alice.johnson@example.com",
-            role: "INTERN"
-        },
-        {
-            id: 4,
-            name: "Bob Brown",
-            email: "bob.brown@example.com",
-            role: "Engineer"
-        },
-        {
-            id: 5,
-            name: "Charlie Wilson",
-            email: "charlie.wilson@example.com",
-            role: "Admin"
-        }
-    ];
-    
-    findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN') {
-        if (role) {
-            const rolesArray = this.users.filter(user => user.role === role);
+    // Constructor injects the Items repository and EntityManager for database operations
+    constructor(
+        @InjectRepository(Users) private readonly itemsRepository: Repository<Users>, 
+        @InjectRepository(UsersActivity) private readonly usersActivityRepository: Repository<UsersActivity>, 
+        private readonly entityManager: EntityManager
+    ) {}
 
-            if (rolesArray.length === 0) throw new NotFoundException('User role not found')
-            return rolesArray;
-        }
 
-        return this.users
+    // Creates a new item using DTO and saves it to the database
+    async SignUp(userDto: UserDto) {
+        const item = new Users(userDto); // Creates a new Item instance from the DTO
+        await this.entityManager.save(item); // Saves the item to the database using entity manager
     }
 
-    findOne(id: number) {
-        const user = this.users.find(user => user.id === id);
-
-        if (!user) throw new NotFoundException('User not found')
-
-        return user
+    async SignIn(username: string) {
+        return this.itemsRepository.findOneBy({ username }); // Uses a where clause to find the item
     }
 
-    create(CreateUserDto: CreateUserDto) {
-        const usersByHighestID = [...this.users].sort((a, b) => b.id - a.id)
-
-        const newUser = {
-            id: usersByHighestID[0].id + 1,
-            ...CreateUserDto
-        }
-
-        this.users.push(newUser);
-        return newUser;
-    }
-
-    update(id: number, UpdateUserDto: UpdateUserDto) {
-        this.users = this.users.map(user => { 
-            if (user.id === id) {
-                return {...user,...UpdateUserDto}
-            }
-            return user
-        })
-
-        return this.findOne(id)
-    }
-
-    delete(id: number) {
-        const removedUser = this.findOne(id)
-
-        this.users = this.users.filter(user => user.id !== id)
-
-        return removedUser;
+    async LogUserActivity(userActivtyDto: UserActivtyDto) {
+        const activity = new UsersActivity(userActivtyDto); 
+        
+        await this.entityManager.save(activity);
     }
 }

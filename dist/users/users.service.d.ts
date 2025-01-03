@@ -1,36 +1,14 @@
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UserDto, UserActivtyDto } from './dto/user.dto';
+import { EntityManager, Repository } from 'typeorm';
+import { Users } from './entities/user.entity';
+import { UsersActivity } from "./entities/user-activity.entity";
 export declare class UsersService {
-    private users;
-    findAll(role?: 'INTERN' | 'ENGINEER' | 'ADMIN'): {
-        id: number;
-        name: string;
-        email: string;
-        role: string;
-    }[];
-    findOne(id: number): {
-        id: number;
-        name: string;
-        email: string;
-        role: string;
-    };
-    create(CreateUserDto: CreateUserDto): {
-        name: string;
-        email: string;
-        role: "INTERN" | "ENGINEER" | "ADMIN";
-        id: number;
-    };
-    update(id: number, UpdateUserDto: UpdateUserDto): {
-        id: number;
-        name: string;
-        email: string;
-        role: string;
-    };
-    delete(id: number): {
-        id: number;
-        name: string;
-        email: string;
-        role: string;
-    };
+    private readonly itemsRepository;
+    private readonly usersActivityRepository;
+    private readonly entityManager;
+    constructor(itemsRepository: Repository<Users>, usersActivityRepository: Repository<UsersActivity>, entityManager: EntityManager);
+    SignUp(userDto: UserDto): Promise<void>;
+    SignIn(username: string): Promise<Users>;
+    LogUserActivity(userActivtyDto: UserActivtyDto): Promise<void>;
 }
 //# sourceMappingURL=users.service.d.ts.map
