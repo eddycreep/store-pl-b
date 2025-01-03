@@ -20,14 +20,14 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    async SIgnUp(userDto) {
+    async SignUp(userDto) {
         return this.usersService.SignUp(userDto);
     }
-    async SignIn(userDto) {
-        return this.usersService.SignIn(userDto);
+    async SignIn(username) {
+        return this.usersService.SignIn(username);
     }
-    async logUserActivity(userActivtyDto) {
-        return this.usersService.logUserActivity(userActivtyDto);
+    async LogUserActivity(userActivtyDto) {
+        return this.usersService.LogUserActivity(userActivtyDto);
     }
 };
 exports.UsersController = UsersController;
@@ -37,12 +37,12 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.UserDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "SIgnUp", null);
+], UsersController.prototype, "SignUp", null);
 __decorate([
-    (0, common_1.Get)('sign-in'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('username')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_dto_1.UserDto]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "SignIn", null);
 __decorate([
@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [user_dto_1.UserActivtyDto]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "logUserActivity", null);
+], UsersController.prototype, "LogUserActivity", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])

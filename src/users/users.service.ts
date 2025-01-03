@@ -1,74 +1,35 @@
 import { format } from "date-fns";
-import { DatabaseService } from '../database/database.service';
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { UserDto, UserActivtyDto } from './dto/user.dto'
+import { UserDto, UserActivtyDto, CreateUserDto } from './dto/user.dto'
+import { EntityManager, Repository } from 'typeorm';
+import { Users } from './entities/user.entity'
 
+import { InjectRepository } from '@nestjs/typeorm';
+import { UsersActivity } from "./entities/user-activity.entity";
 
 @Injectable()
 export class UsersService {
-    constructor(private readonly databaseService: DatabaseService) {}
+    // Constructor injects the Items repository and EntityManager for database operations
+    constructor(
+        @InjectRepository(Users) private readonly itemsRepository: Repository<Users>, 
+        @InjectRepository(UsersActivity) private readonly usersActivityRepository: Repository<UsersActivity>, 
+        private readonly entityManager: EntityManager
+    ) {}
 
+
+    // Creates a new item using DTO and saves it to the database
     async SignUp(userDto: UserDto) {
-        const { emp_id, emp_name, emp_surname, id_no, username, role, phone_number, email_address } = userDto;
-
-        const query = `INSERT INTO loyalty_program.user (emp_id, emp_name, emp_surname, id_no, username, role, phone_number, email_address)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
-
-        try {
-            await this.databaseService.query(query, [
-                emp_id,
-                emp_name,
-                emp_surname,
-                id_no,
-                username,
-                role,
-                phone_number,
-                email_address
-            ]);
-
-            return { message: 'User Activity Logged Successfully' };
-        } catch (error) {
-            console.error('Error saving users information:', error.message);
-            throw new BadRequestException('Error saving users information:');
-        }
+        const item = new Users(userDto); // Creates a new Item instance from the DTO
+        await this.entityManager.save(item); // Saves the item to the database using entity manager
     }
 
-    // get user using username x password
-    async SignIn(userDto: UserDto) {
-        const{ username, password } = userDto;
-
-        const query = `SELECT emp_id, emp_name, emp_surname, password, id_no, username, role, phone_number, email_address FROM loyalty_program.user WHERE username = ? AND password = ?`;
-
-        try {
-            // Explicitly pass only the required parameters
-            return await this.databaseService.query(query, [username, password]);
-        } catch (error) {
-            console.error('No User was found with that username x id', error.message);
-            throw new BadRequestException('No User was found with that username x id ' + error.message);
-        }
+    async SignIn(username: string) {
+        return this.itemsRepository.findOneBy({ username }); // Uses a where clause to find the item
     }
 
-    // log user
-    async logUserActivity(userActivtyDto: UserActivtyDto) {
-        const { emp_id, emp_name, activity_id, activity, activity_type, time_logged, log_message } = userActivtyDto;
-    
-        const query = `INSERT INTO loyalty_program.tbllogs(emp_id, emp_name, activity_id, activity, activity_type, time_logged, log_message)VALUES(?, ?, ?, ?, ?, ?, ?)`;
-
-        try {
-            // Save user info to the database
-            await this.databaseService.query(query, [
-                emp_id,
-                emp_name,
-                activity_id,
-                activity,
-                activity_type,
-                time_logged,
-                log_message
-            ]);
-
-            return { message: 'User Activity Logged Successfully' };
-        } catch (error) {
-            console.error('Error logging users activity', error.message);
-            throw new BadRequestException('Error logging users activity');
-        }
+    async LogUserActivity(userActivtyDto: UserActivtyDto) {
+        const activity = new UsersActivity(userActivtyDto); 
+        
+        await this.entityManager.save(activity);
     }
 }

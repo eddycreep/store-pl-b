@@ -8,70 +8,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
-const database_service_1 = require("../database/database.service");
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("typeorm");
+const user_entity_1 = require("./entities/user.entity");
+const typeorm_2 = require("@nestjs/typeorm");
+const user_activity_entity_1 = require("./entities/user-activity.entity");
 let UsersService = class UsersService {
-    constructor(databaseService) {
-        this.databaseService = databaseService;
+    constructor(itemsRepository, usersActivityRepository, entityManager) {
+        this.itemsRepository = itemsRepository;
+        this.usersActivityRepository = usersActivityRepository;
+        this.entityManager = entityManager;
     }
     async SignUp(userDto) {
-        const { emp_id, emp_name, emp_surname, id_no, username, role, phone_number, email_address } = userDto;
-        const query = `INSERT INTO loyalty_program.user (emp_id, emp_name, emp_surname, id_no, username, role, phone_number, email_address)VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
-        try {
-            await this.databaseService.query(query, [
-                emp_id,
-                emp_name,
-                emp_surname,
-                id_no,
-                username,
-                role,
-                phone_number,
-                email_address
-            ]);
-            return { message: 'User Activity Logged Successfully' };
-        }
-        catch (error) {
-            console.error('Error saving users information:', error.message);
-            throw new common_1.BadRequestException('Error saving users information:');
-        }
+        const item = new user_entity_1.Users(userDto);
+        await this.entityManager.save(item);
     }
-    async SignIn(userDto) {
-        const { username, password } = userDto;
-        const query = `SELECT emp_id, emp_name, emp_surname, password, id_no, username, role, phone_number, email_address FROM loyalty_program.user WHERE username = ? AND password = ?`;
-        try {
-            return await this.databaseService.query(query, [username, password]);
-        }
-        catch (error) {
-            console.error('No User was found with that username x id', error.message);
-            throw new common_1.BadRequestException('No User was found with that username x id ' + error.message);
-        }
+    async SignIn(username) {
+        return this.itemsRepository.findOneBy({ username });
     }
-    async logUserActivity(userActivtyDto) {
-        const { emp_id, emp_name, activity_id, activity, activity_type, time_logged, log_message } = userActivtyDto;
-        const query = `INSERT INTO loyalty_program.tbllogs(emp_id, emp_name, activity_id, activity, activity_type, time_logged, log_message)VALUES(?, ?, ?, ?, ?, ?, ?)`;
-        try {
-            await this.databaseService.query(query, [
-                emp_id,
-                emp_name,
-                activity_id,
-                activity,
-                activity_type,
-                time_logged,
-                log_message
-            ]);
-            return { message: 'User Activity Logged Successfully' };
-        }
-        catch (error) {
-            console.error('Error logging users activity', error.message);
-            throw new common_1.BadRequestException('Error logging users activity');
-        }
+    async LogUserActivity(userActivtyDto) {
+        const activity = new user_activity_entity_1.UsersActivity(userActivtyDto);
+        await this.entityManager.save(activity);
     }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [database_service_1.DatabaseService])
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.Users)),
+    __param(1, (0, typeorm_2.InjectRepository)(user_activity_entity_1.UsersActivity)),
+    __metadata("design:paramtypes", [typeorm_1.Repository,
+        typeorm_1.Repository,
+        typeorm_1.EntityManager])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

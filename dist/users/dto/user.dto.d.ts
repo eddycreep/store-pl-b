@@ -1,13 +1,23 @@
-export declare class UserDto {
-    emp_id: number;
-    username: string;
-    password: string;
-    id_no: string;
+export declare class CreateUserDto {
     emp_name: string;
     emp_surname: string;
+    id_no: string;
+    username: string;
+    password: string;
     role: string;
     phone_number: string;
     email_address: string;
+}
+export declare class UserDto {
+    emp_id: number;
+    username?: string;
+    password?: string;
+    id_no?: string;
+    emp_name?: string;
+    emp_surname?: string;
+    role?: string;
+    phone_number?: string;
+    email_address?: string;
 }
 export declare class UserActivtyDto {
     emp_id: number;
