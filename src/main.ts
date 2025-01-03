@@ -2,20 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import { setupSwagger } from './utils/swagger';
-import { ConfigService } from '@nestjs/config';
 
 dotenv.config(); // Load environment variables
+
+const port = 4000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //const port = process.env.PORT || 4000;
-
-  // Fetch ConfigService instance
-  const configService = app.get(ConfigService);
-
-  // Get port from ConfigService
-  const port = configService.getOrThrow<number>('PORT');
+  //const port = parseInt(process.env.PORT, 10) || 3000; // Use Render's PORT environment variable or SERVERPORT for local
 
   // Enable CORS
   app.enableCors({
@@ -27,7 +22,7 @@ async function bootstrap() {
 
   setupSwagger(app, port); // setup swagger docs
 
-  await app.listen(port, '0.0.0.0'); // Bind to all network interfaces
+  await app.listen(port, '0.0.0.0'); 
   console.log(`Application is running on: http://localhost:${port}`);
 }
 
