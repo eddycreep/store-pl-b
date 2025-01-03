@@ -5,12 +5,12 @@ import { setupSwagger } from './utils/swagger';
 
 dotenv.config(); // Load environment variables
 
-const port = 4000;
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  //const port = parseInt(process.env.PORT, 10) || 3000; // Use Render's PORT environment variable or SERVERPORT for local
+  //const port = +(process.env.PORT, 10) || 3000; // Use Render's PORT environment variable or SERVERPORT for local
+
+  const port = parseInt(process.env.PORT) || 4000;
 
   // Enable CORS
   app.enableCors({
@@ -22,7 +22,8 @@ async function bootstrap() {
 
   setupSwagger(app, port); // setup swagger docs
 
-  await app.listen(port, '0.0.0.0'); 
+  //await app.listen(port); 
+  await app.listen(process.env.PORT ?? 4000);
   console.log(`Application is running on: http://localhost:${port}`);
 }
 
