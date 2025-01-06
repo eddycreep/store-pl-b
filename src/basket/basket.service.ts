@@ -105,7 +105,6 @@
 //       throw new BadRequestException('Error fetching product prices: ' + error.message);
 //     }
 //   }
-  
 
 //   async saveCustomerBasketItems(saveBasketItemsDto: SaveBasketItemsDto) {
 //     const { basket_id, customer_id, product, product_price, quantity } = saveBasketItemsDto;

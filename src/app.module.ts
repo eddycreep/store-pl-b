@@ -6,27 +6,37 @@ import { ConfigModule } from '@nestjs/config';
 //import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
+import { Users } from './users/entities/user.entity';
 
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }), // ensure the config service is available to be injected - no need to keep re-importing
+    //ConfigModule.forRoot({ isGlobal: true }), // ensure the config service is available to be injected - no need to keep re-importing
 
     TypeOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService) => ({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => {
+        // Log the database username to verify the environment variable is loaded correctly
+        console.log('Database username:', configService.get('MYSQL_USERNAME'));
+        console.log('Database host:', configService.get('HOST'));
+        console.log('Database PASSWORD:', configService.get('PASSWORD'));
+        console.log('Database DATABASE:', configService.get('DATABASE'));
+        console.log('Database PORT:', configService.get('PORT'));
+        console.log('Database PORT:', configService.get('MYSQL_PORT'));
+
+        // Return the TypeORM configuration
+        return {
           type: 'mysql',
-          host: configService.getOrThrow('MYSQL_HOST'),
-          port: configService.getOrThrow('MYSQL_PORT'),
-          database: configService.getOrThrow('MYSQL_DATABASE'),
-          username: configService.getOrThrow('MYSQL_USERNAME'),
-          password: configService.getOrThrow('MYSQL_PASSWORD'),
-          autoLoadEntities: true,
-          // synchronize: configService.getOrThrow('MYSQL_SYNCHRONIZE'),
-          connectTimeout: 10000, // Increased connection timeout to 10 seconds
-          retryAttempts: 10, // Retry mechanism: attempts to reconnect up to 5 times
-          retryDelay: 2000, // Delay of 2 seconds between retries
-      }),
-      inject: [ConfigService]  // Injects ConfigService for configuration
+          host: configService.get('HOST'),
+          port: +configService.get('MYSQL_PORT'),
+          username: configService.get('MYSQL_USERNAME'),
+          password: configService.get('PASSWORD'),
+          database: configService.get('DATABASE'),
+          entities: [Users],
+          synchronize: true,
+        };
+      },
+      inject: [ConfigService],
     }),
 
     UsersModule,
@@ -35,5 +45,4 @@ import { ConfigService } from '@nestjs/config';
   controllers: [AppController], // main controller
   providers: [AppService],     // main service
 })
-
 export class AppModule {}

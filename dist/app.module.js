@@ -14,27 +14,34 @@ const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_2 = require("@nestjs/config");
+const user_entity_1 = require("./users/entities/user.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({ isGlobal: true }),
             typeorm_1.TypeOrmModule.forRootAsync({
-                useFactory: (configService) => ({
-                    type: 'mysql',
-                    host: configService.getOrThrow('MYSQL_HOST'),
-                    port: configService.getOrThrow('MYSQL_PORT'),
-                    database: configService.getOrThrow('MYSQL_DATABASE'),
-                    username: configService.getOrThrow('MYSQL_USERNAME'),
-                    password: configService.getOrThrow('MYSQL_PASSWORD'),
-                    autoLoadEntities: true,
-                    connectTimeout: 10000,
-                    retryAttempts: 10,
-                    retryDelay: 2000,
-                }),
-                inject: [config_2.ConfigService]
+                imports: [config_1.ConfigModule],
+                useFactory: (configService) => {
+                    console.log('Database username:', configService.get('MYSQL_USERNAME'));
+                    console.log('Database host:', configService.get('HOST'));
+                    console.log('Database PASSWORD:', configService.get('PASSWORD'));
+                    console.log('Database DATABASE:', configService.get('DATABASE'));
+                    console.log('Database PORT:', configService.get('PORT'));
+                    console.log('Database PORT:', configService.get('MYSQL_PORT'));
+                    return {
+                        type: 'mysql',
+                        host: configService.get('HOST'),
+                        port: +configService.get('MYSQL_PORT'),
+                        username: configService.get('MYSQL_USERNAME'),
+                        password: configService.get('PASSWORD'),
+                        database: configService.get('DATABASE'),
+                        entities: [user_entity_1.Users],
+                        synchronize: true,
+                    };
+                },
+                inject: [config_2.ConfigService],
             }),
             users_module_1.UsersModule,
         ],
