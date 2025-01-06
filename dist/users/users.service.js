@@ -19,8 +19,8 @@ const user_entity_1 = require("./entities/user.entity");
 const typeorm_2 = require("@nestjs/typeorm");
 const user_activity_entity_1 = require("./entities/user-activity.entity");
 let UsersService = class UsersService {
-    constructor(itemsRepository, usersActivityRepository, entityManager) {
-        this.itemsRepository = itemsRepository;
+    constructor(usersRepository, usersActivityRepository, entityManager) {
+        this.usersRepository = usersRepository;
         this.usersActivityRepository = usersActivityRepository;
         this.entityManager = entityManager;
     }
@@ -29,7 +29,7 @@ let UsersService = class UsersService {
         await this.entityManager.save(item);
     }
     async SignIn(username) {
-        return this.itemsRepository.findOneBy({ username });
+        return this.usersRepository.findOneBy({ username });
     }
     async LogUserActivity(userActivtyDto) {
         const activity = new user_activity_entity_1.UsersActivity(userActivtyDto);

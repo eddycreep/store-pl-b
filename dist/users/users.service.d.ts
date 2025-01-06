@@ -3,10 +3,10 @@ import { EntityManager, Repository } from 'typeorm';
 import { Users } from './entities/user.entity';
 import { UsersActivity } from "./entities/user-activity.entity";
 export declare class UsersService {
-    private readonly itemsRepository;
+    private readonly usersRepository;
     private readonly usersActivityRepository;
     private readonly entityManager;
-    constructor(itemsRepository: Repository<Users>, usersActivityRepository: Repository<UsersActivity>, entityManager: EntityManager);
+    constructor(usersRepository: Repository<Users>, usersActivityRepository: Repository<UsersActivity>, entityManager: EntityManager);
     SignUp(userDto: UserDto): Promise<void>;
     SignIn(username: string): Promise<Users>;
     LogUserActivity(userActivtyDto: UserActivtyDto): Promise<void>;

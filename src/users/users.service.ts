@@ -11,7 +11,7 @@ import { UsersActivity } from "./entities/user-activity.entity";
 export class UsersService {
     // Constructor injects the Items repository and EntityManager for database operations
     constructor(
-        @InjectRepository(Users) private readonly itemsRepository: Repository<Users>, 
+        @InjectRepository(Users) private readonly usersRepository: Repository<Users>, 
         @InjectRepository(UsersActivity) private readonly usersActivityRepository: Repository<UsersActivity>, 
         private readonly entityManager: EntityManager
     ) {}
@@ -24,7 +24,7 @@ export class UsersService {
     }
 
     async SignIn(username: string) {
-        return this.itemsRepository.findOneBy({ username }); // Uses a where clause to find the item
+        return this.usersRepository.findOneBy({ username }); // Uses a where clause to find the item
     }
 
     async LogUserActivity(userActivtyDto: UserActivtyDto) {
