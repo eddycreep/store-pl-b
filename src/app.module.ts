@@ -26,11 +26,11 @@ import { Users } from './users/entities/user.entity';
         // Return the TypeORM configuration
         return {
           type: 'mysql',
-          host: configService.get('HOST'),
-          port: +configService.get('MYSQL_PORT'),
-          username: configService.get('MYSQL_USERNAME'),
-          password: configService.get('PASSWORD'),
-          database: configService.get('DATABASE'),
+          host: '102.33.98.164',
+          port: 3306,
+          username: 'stefan',
+          password: 'StefanisnPoes',
+          database: 'loyalty_program',
           entities: [Users],
         };
       },
