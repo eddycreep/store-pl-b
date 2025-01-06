@@ -22,6 +22,9 @@ import { ConfigService } from '@nestjs/config';
           password: configService.getOrThrow('MYSQL_PASSWORD'),
           autoLoadEntities: true,
           // synchronize: configService.getOrThrow('MYSQL_SYNCHRONIZE'),
+          connectTimeout: 10000, // Increased connection timeout to 10 seconds
+          retryAttempts: 10, // Retry mechanism: attempts to reconnect up to 5 times
+          retryDelay: 2000, // Delay of 2 seconds between retries
       }),
       inject: [ConfigService]  // Injects ConfigService for configuration
     }),

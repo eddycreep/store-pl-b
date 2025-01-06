@@ -30,6 +30,9 @@ exports.AppModule = AppModule = __decorate([
                     username: configService.getOrThrow('MYSQL_USERNAME'),
                     password: configService.getOrThrow('MYSQL_PASSWORD'),
                     autoLoadEntities: true,
+                    connectTimeout: 10000,
+                    retryAttempts: 10,
+                    retryDelay: 2000,
                 }),
                 inject: [config_2.ConfigService]
             }),
