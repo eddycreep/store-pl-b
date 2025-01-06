@@ -16,7 +16,6 @@ import { Users } from './users/entities/user.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
-        // Log the database username to verify the environment variable is loaded correctly
         console.log('Database username:', configService.get('MYSQL_USERNAME'));
         console.log('Database host:', configService.get('HOST'));
         console.log('Database PASSWORD:', configService.get('PASSWORD'));
@@ -33,7 +32,6 @@ import { Users } from './users/entities/user.entity';
           password: configService.get('PASSWORD'),
           database: configService.get('DATABASE'),
           entities: [Users],
-          synchronize: true,
         };
       },
       inject: [ConfigService],
