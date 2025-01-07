@@ -7,40 +7,41 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { Users } from './users/entities/user.entity';
+import { UsersActivity } from './users/entities/user-activity.entity';
+import { CacheModule } from '@nestjs/cache-manager';
 
 
 @Module({
   imports: [
-    //ConfigModule.forRoot({ isGlobal: true }), // ensure the config service is available to be injected - no need to keep re-importing
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
-        console.log('Database username:', configService.get('MYSQL_USERNAME'));
-        console.log('Database host:', configService.get('HOST'));
-        console.log('Database PASSWORD:', configService.get('PASSWORD'));
-        console.log('Database DATABASE:', configService.get('DATABASE'));
-        console.log('Database PORT:', configService.get('PORT'));
-        console.log('Database PORT:', configService.get('MYSQL_PORT'));
-
-        // Return the TypeORM configuration
-        return {
-          type: 'mysql',
-          host: '102.33.98.164',
-          port: 3306,
-          username: 'stefan',
-          password: 'StefanisnPoes',
-          database: 'loyalty_program',
-          entities: [Users],
-        };
-      },
-      inject: [ConfigService],
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
-
-    UsersModule,
+    CacheModule.register({
+      ttl: +process.env.CACHE_EXPIRATION_TIME,
+      max: +process.env.CACHE_MAX_ITEMS,
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: +process.env.DATABASE_PORT,
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      entities: [Users, UsersActivity],
+      synchronize: true,
+      retryAttempts: 100,
+      retryDelay: 2000,
+      extra: {
+        connectionLimit: 100000,
+      },
+    }),
+    UsersModule
   ],
-
-  controllers: [AppController], // main controller
-  providers: [AppService],     // main service
+  controllers: [],
+  providers: [
+    AppService,
+    AppController,
+  ],
 })
-export class AppModule {}
+export class AppModule { }
