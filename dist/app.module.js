@@ -15,13 +15,21 @@ const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_entity_1 = require("./users/entities/user.entity");
 const user_activity_entity_1 = require("./users/entities/user-activity.entity");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
+            cache_manager_1.CacheModule.register({
+                ttl: +process.env.CACHE_EXPIRATION_TIME,
+                max: +process.env.CACHE_MAX_ITEMS,
+                isGlobal: true,
+            }),
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'mysql',
                 host: process.env.DATABASE_HOST,
