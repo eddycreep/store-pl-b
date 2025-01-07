@@ -13,39 +13,37 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const config_1 = require("@nestjs/config");
 const typeorm_1 = require("@nestjs/typeorm");
-const config_2 = require("@nestjs/config");
 const user_entity_1 = require("./users/entities/user.entity");
+const user_activity_entity_1 = require("./users/entities/user-activity.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forRootAsync({
-                imports: [config_1.ConfigModule],
-                useFactory: (configService) => {
-                    console.log('Database username:', configService.get('MYSQL_USERNAME'));
-                    console.log('Database host:', configService.get('HOST'));
-                    console.log('Database PASSWORD:', configService.get('PASSWORD'));
-                    console.log('Database DATABASE:', configService.get('DATABASE'));
-                    console.log('Database PORT:', configService.get('PORT'));
-                    console.log('Database PORT:', configService.get('MYSQL_PORT'));
-                    return {
-                        type: 'mysql',
-                        host: '102.33.98.164',
-                        port: 3306,
-                        username: 'stefan',
-                        password: 'StefanisnPoes',
-                        database: 'loyalty_program',
-                        entities: [user_entity_1.Users],
-                    };
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'mysql',
+                host: process.env.DATABASE_HOST,
+                port: +process.env.DATABASE_PORT,
+                username: process.env.DATABASE_USER,
+                password: process.env.DATABASE_PASSWORD,
+                database: process.env.DATABASE_NAME,
+                entities: [user_entity_1.Users, user_activity_entity_1.UsersActivity],
+                synchronize: true,
+                retryAttempts: 100,
+                retryDelay: 2000,
+                extra: {
+                    connectionLimit: 100000,
                 },
-                inject: [config_2.ConfigService],
             }),
-            users_module_1.UsersModule,
+            users_module_1.UsersModule
         ],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        controllers: [],
+        providers: [
+            app_service_1.AppService,
+            app_controller_1.AppController,
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
